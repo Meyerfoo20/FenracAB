@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fenrac AB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #8c8282;
+            --bg-dark: #201e1e;
+            --accent-yellow: #f3c614;
+            --text-main: #f4f1ea;
+            --text-muted: #c4beb8;
+            --border-color: rgba(244, 241, 234, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Grit/Noise texture overlay */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Courier Prime', monospace;
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0rem;
+        }
+
+        .logo span {
+            color: var(--accent-yellow);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent-yellow);
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: -2.4rem;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-yellow);
+            transition: width 0.3s ease, left 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .hero-df-tag {
+            position: absolute;
+            top: 4rem;
+            left: 6rem;
+            font-family: 'Permanent Marker', cursive;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            transform: rotate(-5deg);
+            opacity: 0.8;
+        }
+
+        .hero-sidebar-text {
+            position: absolute;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-sidebar-text::before {
+            content: "";
+            display: inline-block;
+            width: 60px;
+            height: 1px;
+            background-color: var(--accent-yellow);
+        }
+
+        /* The iconic yellow box framing the eyes/focus */
+        .hero-eye-box {
+            background-color: var(--accent-yellow);
+            width: min(700px, 90vw);
+            height: 140px;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--bg-dark);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-eye-box img {
+            width: 120%;
+            height: 125%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(200%) invert(10%);
+            mix-blend-mode: multiply;
+            opacity: 0.85;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-yellow);
+            color: var(--bg-dark);
+            padding: 1rem 2.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 4px 4px 0px var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--bg-dark);
+            background-color: #ffd43b;
+        }
+
+        /* TRACKLIST / SERVICES SECTION */
+        .tracklist-section {
+            padding: 8rem 4rem 4rem 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-yellow);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-header::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        .track-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: padding-left 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .track-item:hover {
+            padding-left: 1rem;
+            background-color: rgba(0,0,0,0.05);
+            border-color: var(--text-main);
+        }
+
+        .track-num {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+            font-weight: 700;
+        }
+
+        .track-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .track-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .arrow-indicator {
+            font-family: 'Permanent Marker', cursive;
+            color: var(--accent-yellow);
+            font-size: 1.5rem;
+            margin-left: 2rem;
+            display: none;
+        }
+
+        .track-item:hover .arrow-indicator {
+            display: inline-block;
+            animation: bounceLeft 0.8s infinite alternate;
+        }
+
+        @keyframes bounceLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-8px); }
+        }
+
+        /* PROJECT PREVIEW CARDS SECTION */
+        .preview-section {
+            padding: 4rem 4rem 8rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .preview-card {
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-yellow);
+        }
+
+        .preview-image-container {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-dark);
+        }
+
+        .preview-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .preview-card:hover .preview-image-container img {
+            transform: scale(1.05);
+        }
+
+        .preview-info {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .preview-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ABOUT SECTION */
+        .about-section {
+            padding: 6rem 4rem;
+            background-color: rgba(0,0,0,0.15);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .about-content h2 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .about-content p {
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .manifesto-box {
+            border: 2px dashed var(--accent-yellow);
+            padding: 3rem;
+            position: relative;
+        }
+
+        .manifesto-box h3 {
+            font-family: 'Permanent Marker', cursive;
+            color: var(--accent-yellow);
+            font-size: 1.8rem;
+            transform: rotate(-2deg);
+            margin-bottom: 1rem;
+        }
+
+        .manifesto-box ul {
+            list-style: none;
+            font-family: 'Courier Prime', monospace;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .manifesto-box li::before {
+            content: "— ";
+            color: var(--accent-yellow);
+        }
+
+        /* CONTACT SECTION */
+        .contact-section {
+            padding: 8rem 4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .contact-section p {
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-yellow);
+        }
+
+        .form-control {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-yellow);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3rem 4rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media(max-width: 900px) {
+            header { padding: 1.5rem 2rem; }
+            nav { display: none; }
+            .hero-sidebar-text { display: none; }
+            .hero-df-tag { top: 2rem; left: 2rem; }
+            .about-section { grid-template-columns: 1fr; padding: 4rem 2rem; }
+            .tracklist-section, .preview-section, .contact-section { padding: 5rem 2rem; }
+            .track-desc { display: none; }
+            .track-item { grid-template-columns: 40px 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="#" class="logo"><span>Fenrac AB</span></a>
+        <nav>
+            <ul>
+                <li><a href="#tjanster">Tjänster</a></li>
+                <li><a href="#om-oss">Om oss</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-df-tag">-Est. 2026</div>
+        
+        <!-- The iconic yellow box framing -->
+        <div class="hero-eye-box">
+            <img src="hero.png" alt="Fenrac Focal Point">
+        </div>
+
+        <h1 class="hero-title">Där idéer blir till verklighet!</h1>
+        <p class="hero-subtitle">Vi bygger digitala hemsidor, appar och koncept som sticker ut!</p>
+        
+        <a href="#kontakt" class="btn-primary">Starta projekt</a>
+    </section>
+
+    <!-- SERVICES / TRACKLIST SECTION -->
+    <section id="tjanster" class="tracklist-section">
+        <div class="section-header">Våra Projekt //</div>
+        
+        <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="track-item">
+            <div class="track-num">01</div>
+            <div class="track-name">Jobbvio</div>
+            <div class="track-desc">jobbvio.se</div>
+            <div class="arrow-indicator">←</div>
+        </a>
+        
+        <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="track-item">
+            <div class="track-num">02</div>
+            <div class="track-name">Fornoleon</div>
+            <div class="track-desc">fornoleon.se</div>
+            <div class="arrow-indicator">←</div>
+        </a>
+        
+        <a href="https://meyerfoo20.github.io/Portfolio-Neo/" target="_blank" rel="noopener noreferrer" class="track-item">
+            <div class="track-num">03</div>
+            <div class="track-name">VD. Portfolio</div>
+            <div class="track-desc">Neo Carlsson</div>
+            <div class="arrow-indicator">←</div>
+        </a>
+        
+        <a href="https://meyerfoo20.github.io/RootTheme/" target="_blank" rel="noopener noreferrer" class="track-item">
+            <div class="track-num">04</div>
+            <div class="track-name">RootTheme</div>
+            <div class="track-desc">Färgpaletter</div>
+            <div class="arrow-indicator">←</div>
+        </a>
+        
+        <a href="#kontakt" class="track-item" style="border-bottom: 2px solid var(--accent-yellow);">
+            <div class="track-num" style="color: var(--text-main);">05</div>
+            <div class="track-name" style="font-family: 'Permanent Marker', cursive; font-size: 1.8rem; color: var(--accent-yellow);">Ditt nästa projekt</div>
+            <div class="track-desc">Din idé till verklighet</div>
+            <div class="arrow-indicator">←</div>
+        </a>
+    </section>
+
+    <!-- PROJECT PREVIEW CARDS SECTION -->
+    <section class="preview-section">
+        <div class="section-header">Inblick i våra skapelser //</div>
+        <div class="preview-grid">
+            
+            <!-- Jobbvio Card -->
+            <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="preview-card">
+                <div class="preview-image-container">
+                    <img src="jobbvio.png" alt="Jobbvio förhandsvisning">
+                </div>
+                <div class="preview-info">
+                    <div class="preview-title">Jobbvio</div>
+                    <div class="preview-desc">jobbvio.se — Enklare väg till nästa jobbmöjlighet.</div>
+                </div>
+            </a>
+
+            <!-- Fornoleon Card -->
+            <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="preview-card">
+                <div class="preview-image-container">
+                    <img src="fornoleon.png" alt="Fornoleon förhandsvisning">
+                </div>
+                <div class="preview-info">
+                    <div class="preview-title">Fornoleon</div>
+                    <div class="preview-desc">fornoleon.se — Äkta napolitansk pizza till eventet.</div>
+                </div>
+            </a>
+
+            <!-- RootTheme Card -->
+            <a href="https://meyerfoo20.github.io/RootTheme/" target="_blank" rel="noopener noreferrer" class="preview-card">
+                <div class="preview-image-container">
+                    <img src="roottheme.png" alt="RootTheme förhandsvisning">
+                </div>
+                <div class="preview-info">
+                    <div class="preview-title">RootTheme</div>
+                    <div class="preview-desc">Färgpaletter och teman för webben.</div>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="om-oss" class="about-section">
+        <div class="about-content">
+            <h2 style="color: #f3c614;">Vi gör det bättre.</h2>
+            <p>Fenrac AB är till för dig. Vi är noga med tydlig kommunikation, för att kunderna ska få den bästa möjliga produkt.</p>
+            <p>Inte samma AI-hemsida som syns överallt, utan vi blandar in den mänskliga faktorn för en unik design. Trots det, nästan lika kort produktionstid som de icke-mänskliga tjänsterna.</p>
+        </div>
+        <div class="manifesto-box">
+            <h3>Våra värderingar..</h3>
+            <ul>
+                <li>Tydlig kommunikation, utan några konstigheter.</li>
+                <li>Design som sticker ut och är byggd efter kundens önskemål.</li>
+                <li>Kort och effektiv utvecklingstid.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="kontakt" class="contact-section">
+        <h2>Hör av dig</h2>
+        <p>Har du ett projekt i åtanke eller vill du förbättra något nuvarande? Skriv!</p>
+        
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Tack för ditt meddelande! Fenrac AB återkommer inom kort.');">
+            <div class="form-group">
+                <label for="name">Ditt Namn</label>
+                <input type="text" id="name" class="form-control" placeholder="Namn" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-postadress</label>
+                <input type="email" id="email" class="form-control" placeholder="namn@foretag.se" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Meddelande</label>
+                <textarea id="message" class="form-control" placeholder="Berätta om din idé..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top: 1rem; width: 100%;">Skicka meddelande</button>
+        </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div>© 2026 Fenrac AB. All rights reserved.</div>
+        <div style="color: var(--accent-yellow);">-AB //</div>
+    </footer>
+
+</body>
+</html>
