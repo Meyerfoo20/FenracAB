@@ -18,6 +18,10 @@
             --border-color: rgba(26, 24, 22, 0.12);
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -45,14 +49,18 @@
             z-index: 999;
         }
 
+        /* STICKY HEADER */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 4rem;
+            padding: 1.5rem 4rem;
             border-bottom: 1px solid var(--border-color);
-            position: relative;
-            z-index: 10;
+            position: sticky;
+            top: 0;
+            background-color: rgba(244, 238, 228, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
         }
 
         .logo {
@@ -91,7 +99,7 @@
         nav a::after {
             content: "";
             position: absolute;
-            bottom: -2.4rem;
+            bottom: -1.8rem;
             left: 50%;
             width: 0;
             height: 2px;
@@ -131,26 +139,37 @@
             z-index: 0;
         }
 
-        /* PROJEKT VYKORT I HERON */
+        /* PROJEKT VYKORT I HERO - Hover-effekt borttagen */
         .hero-postcard {
             position: absolute;
             width: 210px;
             background: #ffffff;
             padding: 12px 12px 16px 12px;
             border-radius: 6px;
-            box-shadow: 0 15px 35px rgba(26, 24, 22, 0.1), 0 3px 10px rgba(0,0,0,0.05);
-            border: 1px solid rgba(26, 24, 22, 0.08);
+            box-shadow: none;
+            border: 1px solid rgba(26, 24, 22, 0.15);
             text-decoration: none;
             color: var(--text-main);
             z-index: 2;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, z-index 0s;
             cursor: pointer;
+            
+            /* Start-tillstånd för inläsningsanimationen */
+            opacity: 0;
+            transform: translateY(40px) scale(0.9);
+            transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .hero-postcard:hover {
-            transform: translateY(-10px) scale(1.08) rotate(0deg) !important;
-            box-shadow: 0 25px 45px rgba(26, 24, 22, 0.2);
-            z-index: 20;
+        .hero-postcard.loaded.postcard-1 {
+            opacity: 1;
+            transform: rotate(-7deg) translateY(0) scale(1);
+        }
+        .hero-postcard.loaded.postcard-2 {
+            opacity: 1;
+            transform: rotate(6deg) translateY(0) scale(1);
+        }
+        .hero-postcard.loaded.postcard-3 {
+            opacity: 1;
+            transform: rotate(-4deg) translateY(0) scale(1);
         }
 
         .hero-postcard img {
@@ -182,23 +201,19 @@
             font-weight: 700;
         }
 
-        /* Positionering för de 3 korten */
         .postcard-1 {
             top: 14%;
             left: 5%;
-            transform: rotate(-7deg);
         }
 
         .postcard-2 {
             top: 18%;
             right: 6%;
-            transform: rotate(6deg);
         }
 
         .postcard-3 {
-            bottom: 12%;
-            right: 12%;
-            transform: rotate(-4deg);
+            bottom: 4%;
+            right: 10%;
         }
 
         .hero-badge {
@@ -234,7 +249,6 @@
             100% { opacity: 0.4; transform: scale(0.9); }
         }
 
-        /* Hero Animation Container */
         .hero-animation-container {
             width: 100%;
             max-width: 1000px;
@@ -327,6 +341,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.6rem;
+            cursor: pointer;
         }
 
         .btn-primary:hover {
@@ -356,6 +371,10 @@
             border-radius: 4px;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-secondary:hover {
@@ -401,7 +420,6 @@
             font-size: 1.05rem;
         }
 
-        /* PROJECTS BOX IN FULL WIDTH SECTION */
         .projects-box {
             border: 2px dashed var(--accent-yellow);
             padding: 2.5rem;
@@ -489,6 +507,127 @@
             color: var(--accent-yellow);
         }
 
+        /* PRICING SECTION */
+        .pricing-section {
+            padding: 6rem 4rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-header h2 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-header p {
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .pricing-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(26, 24, 22, 0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(26, 24, 22, 0.08);
+            border-color: var(--accent-gold);
+        }
+
+        .pricing-card.featured {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            border: 2px solid var(--accent-yellow);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            right: 25px;
+            background: var(--accent-yellow);
+            color: var(--bg-dark);
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            letter-spacing: 1px;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-price {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card.featured .pricing-price {
+            color: var(--accent-yellow);
+        }
+
+        .pricing-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            flex-grow: 1;
+        }
+
+        .pricing-card.featured .pricing-desc {
+            color: var(--text-light-muted);
+        }
+
+        .pricing-card .btn-primary, 
+        .pricing-card .btn-secondary {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .pricing-card.featured .btn-primary {
+            background-color: var(--accent-yellow);
+            color: var(--bg-dark);
+            border-color: var(--accent-yellow);
+        }
+
+        .pricing-card.featured .btn-primary:hover {
+            background-color: #ffd838;
+        }
+
         /* CONTACT SECTION */
         .contact-section {
             padding: 6rem 4rem 8rem 4rem;
@@ -550,6 +689,10 @@
         textarea.form-control {
             resize: vertical;
             min-height: 120px;
+        }
+
+        select.form-control {
+            cursor: pointer;
         }
 
         /* FOOTER */
@@ -641,17 +784,19 @@
 
         /* RESPONSIVE DESIGN */
         @media(max-width: 1250px) {
-            .postcard-1 { left: 2%; transform: scale(0.85) rotate(-7deg); }
-            .postcard-2 { right: 2%; transform: scale(0.85) rotate(6deg); }
+            .postcard-1 { left: 2%; }
+            .postcard-2 { right: 2%; }
             .postcard-3 { display: none; }
         }
 
         @media(max-width: 950px) {
-            .hero-postcard { display: none; } /* Döljer svävande kort på mindre skärmar för att bibehålla läsbarhet */
+            .hero-postcard { display: none; }
             header { padding: 1.5rem 2rem; }
             nav { display: none; }
             .full-width-section { padding: 4rem 1.5rem; }
             .full-width-container { grid-template-columns: 1fr; gap: 3rem; }
+            .pricing-section { padding: 4rem 1.5rem; }
+            .pricing-grid { grid-template-columns: 1fr; }
             .footer-container { grid-template-columns: 1fr; gap: 2rem; }
             .footer-bottom { flex-direction: column; gap: 1rem; align-items: flex-start; }
             .track-desc { display: none; }
@@ -663,13 +808,12 @@
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
-        <a href="#" class="logo">Fenrac <span>AB</span></a>
+        <a href="#" class="logo"><img src="logo.png" style="width: 155px;"></a>
         <nav>
             <ul>
                 <li><a href="#om-oss">Om oss</a></li>
-                <li><a href="#projekt">Projekt</a></li>
+                <li><a href="#priser">Priser</a></li>
                 <li><a href="#kontakt">Kontakt</a></li>
             </ul>
         </nav>
@@ -679,8 +823,7 @@
     <section class="hero">
         <div class="hero-glow"></div>
 
-        <!-- 3 SVÄVANDE PROJEKT-VYKORT -->
-        <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-1">
+        <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-1" style="transition-delay: 0.1s;">
             <img src="Images/jobbvio-logo.png" alt="Jobbvio">
             <div class="postcard-caption">
                 <span class="postcard-title">Jobbvio</span>
@@ -688,7 +831,7 @@
             </div>
         </a>
 
-        <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-2">
+        <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-2" style="transition-delay: 0.25s;">
             <img src="Images/fornoleon-logo.png" alt="Fornoleon">
             <div class="postcard-caption">
                 <span class="postcard-title">Fornoleon</span>
@@ -696,7 +839,7 @@
             </div>
         </a>
 
-        <a href="https://meyerfoo20.github.io/Portfolio-Neo/" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-3">
+        <a href="https://meyerfoo20.github.io/Portfolio-Neo/" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-3" style="transition-delay: 0.4s;">
             <img src="Images/porfolio-logo.png" alt="VD Portfolio">
             <div class="postcard-caption">
                 <span class="postcard-title">VD Portfolio</span>
@@ -704,12 +847,6 @@
             </div>
         </a>
         
-        <div class="hero-badge">
-            <span class="badge-dot"></span>
-            <span>EST. 2026</span>
-        </div>
-        
-        <!-- Hero Animation Container för FENRAC AB -->
         <div class="hero-animation-container" id="heroAnimationBox" title="Klicka för att spela om animationen">
             <div class="morph-stage" id="morphStage"></div>
         </div>
@@ -723,7 +860,6 @@
         </div>
     </section>
 
-    <!-- OM OSS + VÅRA PROJEKT -->
     <section id="om-oss" class="full-width-section">
         <div class="full-width-container">
             <div class="about-content">
@@ -775,12 +911,63 @@
         </div>
     </section>
 
+    <!-- PRICING SECTION -->
+    <section id="priser" class="pricing-section">
+        <div class="pricing-header">
+            <h2>Prisplaner</h2>
+            <p>Välj den modell som passar bäst för ditt nästa digitala projekt.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card">
+                <div>
+                    <h3>Basic</h3>
+                    <div class="pricing-price">Från 15 000 kr</div>
+                    <p class="pricing-desc">Vi bygger och formar hemsidan efter kundens förfrågan, men då endast fram tills lanseringen.</p>
+                </div>
+                <button type="button" class="btn-secondary select-plan-btn" data-plan="Basic">Välj Basic</button>
+            </div>
+
+            <!-- Mile Plan -->
+            <div class="pricing-card featured">
+                <div class="pricing-badge">Populärast</div>
+                <div>
+                    <h3>Mile</h3>
+                    <div class="pricing-price">3 000 kr / mån</div>
+                    <p class="pricing-desc" style="margin-bottom: 1rem;"><strong style="color: var(--text-light);">Startavgift:</strong> 10 000 kr</p>
+                    <p class="pricing-desc">Vi bygger och skräddarsyr hemsidan/appen tillsammans med kunden. Utvecklar projektet under en längre tid med tydlig kommunikation och kontinuerligt underhåll även efter lansering.</p>
+                </div>
+                <button type="button" class="btn-primary select-plan-btn" data-plan="Mile">Välj Mile <span class="btn-arrow">→</span></button>
+            </div>
+
+            <!-- Custom Plan -->
+            <div class="pricing-card">
+                <div>
+                    <h3>Custom</h3>
+                    <div class="pricing-price">Varierande</div>
+                    <p class="pricing-desc">Denna plan kan variera både projektmässigt och prismässigt. Används för projekt som inte stämmer in på någon av de andra planer.</p>
+                </div>
+                <button type="button" class="btn-secondary select-plan-btn" data-plan="Custom">Kontakta oss</button>
+            </div>
+        </div>
+    </section>
+
     <!-- CONTACT SECTION -->
     <section id="kontakt" class="contact-section">
         <h2>Hör av dig</h2>
         <p>Har du ett projekt i åtanke eller vill du förbättra något nuvarande? Skriv!</p>
         
         <form class="contact-form" onsubmit="event.preventDefault(); alert('Tack för ditt meddelande! Fenrac AB återkommer inom kort.');">
+            <div class="form-group">
+                <label for="plan-select">Välj Prisplan *</label>
+                <select id="plan-select" class="form-control" required>
+                    <option value="" disabled selected>-- Välj en prisplan --</option>
+                    <option value="Basic">Basic (Från 15 000 kr)</option>
+                    <option value="Mile">Mile (3 000 kr / mån + startavgift)</option>
+                    <option value="Custom">Custom (Varierande)</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="name">Ditt Namn</label>
                 <input type="text" id="name" class="form-control" placeholder="Namn" required>
@@ -801,7 +988,7 @@
     <footer>
         <div class="footer-container">
             <div class="footer-brand">
-                <a href="#" class="footer-logo">Fenrac <span>AB</span></a>
+                <a href="#" class="footer-logo"><img src="logo-white.png" style="width: 200px; margin-left: -8px;"></a>
                 <p>Vi bygger digitala hemsidor, appar och koncept som sticker ut från mängden.</p>
             </div>
             
@@ -810,6 +997,7 @@
                 <ul>
                     <li><a href="#om-oss">Om Oss</a></li>
                     <li><a href="#projekt">Våra Projekt</a></li>
+                    <li><a href="#priser">Priser</a></li>
                     <li><a href="#kontakt">Kontakt</a></li>
                 </ul>
             </div>
@@ -830,7 +1018,6 @@
         </div>
     </footer>
 
-    <!-- ANIMATION SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const stage = document.getElementById('morphStage');
@@ -878,6 +1065,74 @@
 
             box.addEventListener('click', runAnimation);
             runAnimation();
+
+            setTimeout(() => {
+                const postcards = document.querySelectorAll('.hero-postcard');
+                postcards.forEach(card => {
+                    card.classList.add('loaded');
+                });
+            }, 200);
+
+            function smoothScrollTo(targetY, duration = 800) {
+                const startY = window.pageYOffset;
+                const distance = targetY - startY;
+                let startTime = null;
+
+                function animation(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    
+                    let progress = timeElapsed / duration;
+                    if (progress > 1) progress = 1;
+                    const ease = progress < 0.5 
+                        ? 4 * progress * progress * progress 
+                        : (progress - 1) * (2 * progress - 2) * (2 * progress - 2) + 1;
+
+                    window.scrollTo(0, startY + distance * ease);
+
+                    if (timeElapsed < duration) {
+                        requestAnimationFrame(animation);
+                    }
+                }
+
+                requestAnimationFrame(animation);
+            }
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    
+                    if (targetId === '#') {
+                        smoothScrollTo(0, 800);
+                        return;
+                    }
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                        smoothScrollTo(targetPosition, 850);
+                    }
+                });
+            });
+
+            const planButtons = document.querySelectorAll('.select-plan-btn');
+            const planSelect = document.getElementById('plan-select');
+
+            planButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const planName = button.getAttribute('data-plan');
+                    if (planSelect && planName) {
+                        planSelect.value = planName;
+                    }
+                    
+                    const contactSection = document.getElementById('kontakt');
+                    if (contactSection) {
+                        const targetPosition = contactSection.getBoundingClientRect().top + window.pageYOffset;
+                        smoothScrollTo(targetPosition, 850);
+                    }
+                });
+            });
         });
     </script>
 </body>
