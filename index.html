@@ -116,7 +116,7 @@
         nav a::after {
             content: "";
             position: absolute;
-            bottom: -0.5rem;
+            bottom: -1.1rem;
             left: 50%;
             width: 0;
             height: 2px;
@@ -330,15 +330,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
             user-select: none;
-            perspective: 1000px;
             z-index: 3;
             overflow: hidden;
         }
 
         .morph-stage {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 100%;
@@ -354,14 +352,30 @@
             color: var(--text-main);
             font-size: clamp(2rem, 7.5vw, 7rem);
             letter-spacing: clamp(1px, 1vw, 6px);
-            transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease, filter 0.85s ease;
-            transform-style: preserve-3d;
-            will-change: transform, opacity, filter;
         }
 
         .letter-char.accent {
             color: var(--accent-gold);
             text-shadow: 0 0 25px rgba(216, 159, 0, 0.35);
+        }
+
+        /* Skrivmaskins-markör */
+        .typewriter-cursor {
+            display: inline-block;
+            width: 0.22em;
+            height: 0.85em;
+            background-color: var(--accent-gold);
+            margin-left: 4px;
+            vertical-align: baseline;
+            animation: blink 0.7s infinite;
+            box-shadow: 0 0 12px rgba(216, 159, 0, 0.6);
+            border-radius: 1px;
+            transition: opacity 0.4s ease;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
         }
 
         .hero-title {
@@ -1104,7 +1118,7 @@
             </div>
         </a>
         
-        <div class="hero-animation-container" id="heroAnimationBox" title="Klicka för att spela om animationen">
+        <div class="hero-animation-container" id="heroAnimationBox">
             <div class="morph-stage" id="morphStage"></div>
         </div>
 
@@ -1313,56 +1327,47 @@
                 });
             }
 
-            // Morph Text Animation
+            // Skrivmaskinsanimation för FENRAC AB vid sidinladdning
             const stage = document.getElementById('morphStage');
-            const box = document.getElementById('heroAnimationBox');
-            let isAnimating = false;
-
             const targetText = "FENRAC AB";
 
-            function runAnimation() {
-                if (isAnimating) return;
-                isAnimating = true;
-
+            function runTypewriterAnimation() {
                 stage.innerHTML = '';
 
-                const isMobile = window.innerWidth <= 600;
-                const spreadX = isMobile ? 220 : 700;
-                const spreadY = isMobile ? 200 : 500;
+                const cursor = document.createElement('span');
+                cursor.className = 'typewriter-cursor';
+                stage.appendChild(cursor);
 
-                targetText.split('').forEach((char, index) => {
-                    const span = document.createElement('span');
-                    
-                    const isAccent = index >= 7;
-                    span.className = 'letter-char' + (isAccent ? ' accent' : '');
-                    span.textContent = char === ' ' ? '\u00A0' : char;
+                let index = 0;
+                const typingSpeed = 110; // Hastighet i ms per tecken
 
-                    const startX = (Math.random() - 0.5) * spreadX;
-                    const startY = (Math.random() - 0.5) * spreadY;
-                    const startZ = Math.random() * (isMobile ? 150 : 300) + 100;
-                    const startRotX = (Math.random() - 0.5) * 540;
-                    const startRotY = (Math.random() - 0.5) * 540;
+                function typeNextChar() {
+                    if (index < targetText.length) {
+                        const char = targetText[index];
+                        const span = document.createElement('span');
 
-                    span.style.transform = `translate3d(${startX}px, ${startY}px, ${startZ}px) rotateX(${startRotX}deg) rotateY(${startRotY}deg) scale(1.5)`;
-                    span.style.opacity = '0';
-                    span.style.filter = 'blur(12px)';
+                        const isAccent = index >= 7; // "AB" får guld-accent
+                        span.className = 'letter-char' + (isAccent ? ' accent' : '');
+                        span.textContent = char === ' ' ? '\u00A0' : char;
 
-                    stage.appendChild(span);
+                        stage.insertBefore(span, cursor);
+                        index++;
+                        setTimeout(typeNextChar, typingSpeed);
+                    } else {
+                        // Animationen är klar: vänta 2 sekunder och tona sedan bort markören
+                        setTimeout(() => {
+                            cursor.style.opacity = '0';
+                            setTimeout(() => {
+                                cursor.remove();
+                            }, 400); // Tar bort elementet helt efter övergången
+                        }, 2000);
+                    }
+                }
 
-                    setTimeout(() => {
-                        span.style.transform = 'translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1)';
-                        span.style.opacity = '1';
-                        span.style.filter = 'blur(0px)';
-                    }, 70 + index * 60);
-                });
-
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 70 + targetText.length * 60 + 850);
+                setTimeout(typeNextChar, 300); // Liten fördröjning innan skrivandet startar
             }
 
-            box.addEventListener('click', runAnimation);
-            runAnimation();
+            runTypewriterAnimation();
 
             setTimeout(() => {
                 const postcards = document.querySelectorAll('.hero-postcard');
