@@ -722,39 +722,33 @@
             background-color: #ffd838;
         }
 
-        /* LIGHTHOUSE / HEMSIDETEST SECTION */
-        .lh-section {
-            width: 100%;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            border-top: 2px solid var(--accent-yellow);
-            border-bottom: 2px solid var(--accent-yellow);
-            padding: 6rem 4rem;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-            margin: 3rem 0;
-        }
-
-        .lh-container {
-            max-width: 1000px;
+        /* FAQ SECTION */
+        .faq-section {
+            padding: 5rem 4rem;
+            max-width: 1300px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 4rem;
+            align-items: start;
         }
 
-        .lh-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
+        .faq-intro {
+            position: sticky;
+            top: 110px;
         }
 
-        .lh-kicker {
+        .faq-kicker {
+            display: block;
             font-family: 'Courier Prime', monospace;
             font-size: 0.85rem;
             letter-spacing: 3px;
             text-transform: uppercase;
-            color: var(--accent-yellow);
+            color: var(--accent-gold);
             margin-bottom: 1rem;
-            display: block;
         }
 
-        .lh-header h2 {
+        .faq-intro h2 {
             font-size: clamp(2rem, 4vw, 3rem);
             text-transform: uppercase;
             letter-spacing: -1px;
@@ -762,78 +756,25 @@
             margin-bottom: 1rem;
         }
 
-        .lh-header p {
+        .faq-intro p {
             font-family: 'Courier Prime', monospace;
-            color: var(--text-light-muted);
+            color: var(--text-muted);
             font-size: 1.05rem;
             line-height: 1.6;
-            max-width: 620px;
-            margin: 0 auto;
+            margin-bottom: 2rem;
         }
 
-        .lh-form {
+        .faq-filters {
             display: flex;
-            gap: 0.75rem;
-            max-width: 720px;
-            margin: 0 auto 1rem auto;
-        }
-
-        .lh-input {
-            flex: 1;
-            min-width: 0;
-            background: rgba(244, 238, 228, 0.06);
-            border: 1px solid rgba(244, 238, 228, 0.2);
-            color: var(--text-light);
-            padding: 0.9rem 1rem;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            border-radius: 4px;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            -webkit-appearance: none;
-        }
-
-        .lh-input::placeholder {
-            color: var(--text-light-muted);
-        }
-
-        .lh-input:focus {
-            border-color: var(--accent-yellow);
-            box-shadow: 0 0 0 3px rgba(243, 198, 20, 0.15);
-        }
-
-        .lh-submit {
-            background-color: var(--accent-yellow);
-            color: var(--bg-dark);
-            border-color: var(--accent-yellow);
-            white-space: nowrap;
-        }
-
-        .lh-submit:hover {
-            background-color: #ffd838;
-        }
-
-        .lh-submit:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
-
-        .lh-submit .btn-arrow {
-            color: var(--bg-dark);
-        }
-
-        .lh-strategy {
-            display: flex;
-            justify-content: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
-        .lh-strategy-btn {
+        .faq-filter {
             background: transparent;
-            border: 1px solid rgba(244, 238, 228, 0.2);
-            color: var(--text-light-muted);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
             font-family: 'Courier Prime', monospace;
             font-size: 0.85rem;
             letter-spacing: 1px;
@@ -841,191 +782,141 @@
             padding: 0.5rem 1.1rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s ease;
             min-height: 40px;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .lh-strategy-btn.active {
-            border-color: var(--accent-yellow);
+        .faq-filter:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+
+        .faq-filter.active {
+            background: var(--bg-dark);
+            border-color: var(--bg-dark);
             color: var(--accent-yellow);
-            background: rgba(243, 198, 20, 0.08);
         }
 
-        .lh-status {
-            text-align: center;
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-light-muted);
-            min-height: 1.5rem;
-            margin-bottom: 1.5rem;
+        .faq-list {
+            border-top: 1px solid var(--border-color);
         }
 
-        .lh-status.error {
-            color: #ff7a6e;
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .lh-spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(243, 198, 20, 0.25);
-            border-top-color: var(--accent-yellow);
-            border-radius: 50%;
-            animation: lh-spin 0.8s linear infinite;
-            vertical-align: -2px;
-            margin-right: 0.5rem;
-        }
-
-        @keyframes lh-spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .lh-results {
+        .faq-item[hidden] {
             display: none;
         }
 
-        .lh-results.visible {
-            display: block;
-        }
-
-        .lh-tested-url {
-            text-align: center;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.9rem;
-            color: var(--text-light-muted);
-            margin-bottom: 2rem;
-            word-break: break-all;
-        }
-
-        .lh-tested-url strong {
-            color: var(--text-light);
-        }
-
-        .lh-scores {
+        .faq-item summary {
+            list-style: none;
+            cursor: pointer;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .lh-score {
-            border: 2px dashed rgba(243, 198, 20, 0.35);
-            background-color: rgba(0, 0, 0, 0.25);
-            border-radius: 6px;
-            padding: 1.75rem 1rem;
-            text-align: center;
-        }
-
-        .lh-ring {
-            position: relative;
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 1rem auto;
-        }
-
-        .lh-ring svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .lh-ring-bg {
-            fill: none;
-            stroke: rgba(244, 238, 228, 0.1);
-            stroke-width: 8;
-        }
-
-        .lh-ring-fg {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
-            stroke-dasharray: 289;
-            stroke-dashoffset: 289;
-            transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .lh-ring-value {
-            position: absolute;
-            inset: 0;
-            display: flex;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
-            justify-content: center;
-            font-family: 'Courier Prime', monospace;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .lh-score-label {
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .lh-good { color: #3ddc84; stroke: #3ddc84; }
-        .lh-avg  { color: #ffb020; stroke: #ffb020; }
-        .lh-bad  { color: #ff6b5e; stroke: #ff6b5e; }
-
-        .lh-metrics {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
-            margin-bottom: 2.5rem;
+            padding: 1.4rem 0.25rem;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .lh-metric {
-            border-top: 1px solid rgba(244, 238, 228, 0.15);
-            padding-top: 0.9rem;
+        .faq-item summary::-webkit-details-marker {
+            display: none;
         }
 
-        .lh-metric-name {
+        .faq-tag {
             font-family: 'Courier Prime', monospace;
-            font-size: 0.78rem;
-            color: var(--text-light-muted);
+            font-size: 0.72rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.35rem;
+            color: var(--accent-gold);
+            border: 1px solid rgba(216, 159, 0, 0.4);
+            border-radius: 50px;
+            padding: 0.2rem 0.65rem;
+            min-width: 88px;
+            text-align: center;
         }
 
-        .lh-metric-value {
-            font-size: 1.3rem;
-            font-weight: 700;
+        .faq-question {
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            transition: color 0.2s ease;
         }
 
-        .lh-verdict {
-            border: 2px solid var(--accent-yellow);
+        .faq-item summary:hover .faq-question {
+            color: var(--accent-gold);
+        }
+
+        .faq-icon {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.6rem;
+            line-height: 1;
+            color: var(--accent-gold);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item[open] .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 0.25rem 1.6rem calc(88px + 1.25rem);
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.98rem;
+        }
+
+        .faq-answer p + p,
+        .faq-answer p + ul,
+        .faq-answer ul + p {
+            margin-top: 0.8rem;
+        }
+
+        .faq-answer ul {
+            padding-left: 1.2rem;
+        }
+
+        .faq-answer li {
+            margin-bottom: 0.3rem;
+        }
+
+        .faq-answer strong {
+            color: var(--text-main);
+        }
+
+        .faq-cta {
+            margin-top: 2.5rem;
+            padding: 1.8rem 2rem;
+            background: var(--bg-dark);
+            color: var(--text-light);
             border-radius: 8px;
-            padding: 2.2rem;
+            border: 2px solid var(--accent-yellow);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 2rem;
-            background: rgba(243, 198, 20, 0.06);
+            gap: 1.5rem;
         }
 
-        .lh-verdict.ok {
-            border-color: #3ddc84;
-            background: rgba(61, 220, 132, 0.06);
-        }
-
-        .lh-verdict h3 {
-            font-size: 1.6rem;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            margin-bottom: 0.6rem;
-            color: var(--accent-yellow);
-        }
-
-        .lh-verdict.ok h3 {
-            color: #3ddc84;
-        }
-
-        .lh-verdict p {
+        .faq-cta p {
             font-family: 'Courier Prime', monospace;
             color: var(--text-light-muted);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
-        .lh-verdict .btn-primary {
+        .faq-cta strong {
+            display: block;
+            color: var(--accent-yellow);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .faq-cta .btn-primary {
             background-color: var(--accent-yellow);
             color: var(--bg-dark);
             border-color: var(--accent-yellow);
@@ -1033,17 +924,86 @@
             flex-shrink: 0;
         }
 
-        .lh-verdict .btn-primary .btn-arrow {
+        .faq-cta .btn-primary .btn-arrow {
             color: var(--bg-dark);
         }
 
-        .lh-footnote {
-            text-align: center;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.78rem;
+        /* FAQ – MÖRK BAKGRUND */
+        .faq-band {
+            width: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            border-top: 2px solid var(--accent-yellow);
+            border-bottom: 2px solid var(--accent-yellow);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            margin: 3rem 0;
+        }
+
+        .faq-band .faq-section {
+            padding: 6rem 4rem;
+        }
+
+        .faq-band .faq-kicker,
+        .faq-band .faq-icon,
+        .faq-band .faq-tag {
+            color: var(--accent-yellow);
+        }
+
+        .faq-band .faq-tag {
+            border-color: rgba(243, 198, 20, 0.4);
+        }
+
+        .faq-band .faq-intro h2 {
+            color: var(--accent-yellow);
+        }
+
+        .faq-band .faq-intro p,
+        .faq-band .faq-answer {
             color: var(--text-light-muted);
-            margin-top: 1.5rem;
-            opacity: 0.8;
+        }
+
+        .faq-band .faq-answer strong {
+            color: var(--text-light);
+        }
+
+        .faq-band .faq-filter {
+            border-color: rgba(244, 238, 228, 0.2);
+            color: var(--text-light-muted);
+        }
+
+        .faq-band .faq-filter:hover {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        .faq-band .faq-filter.active {
+            background: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+            color: var(--bg-dark);
+        }
+
+        .faq-band .faq-list,
+        .faq-band .faq-item {
+            border-color: rgba(244, 238, 228, 0.15);
+        }
+
+        .faq-band .faq-item summary {
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .faq-band .faq-item summary:hover {
+            background-color: rgba(243, 198, 20, 0.06);
+        }
+
+        .faq-band .faq-item summary:hover .faq-question,
+        .faq-band .faq-item[open] .faq-question {
+            color: var(--accent-yellow);
+        }
+
+        .faq-band .faq-cta {
+            background: rgba(0, 0, 0, 0.25);
+            border: 2px dashed var(--accent-yellow);
         }
 
         /* CONTACT SECTION */
@@ -1118,6 +1078,28 @@
             background-repeat: no-repeat;
             background-position: right 1rem center;
             padding-right: 2.5rem;
+        }
+
+        .form-status {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.95rem;
+            text-align: center;
+            min-height: 1.4rem;
+            margin: 0 !important;
+        }
+
+        .form-status.success {
+            color: #2e8b57;
+        }
+
+        .form-status.error {
+            color: #c0392b;
+        }
+
+        .contact-form button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
         }
 
         /* FOOTER */
@@ -1336,25 +1318,50 @@
                 padding: 3.5rem 1.25rem 4.5rem 1.25rem;
             }
 
-            .lh-section {
-                padding: 4rem 1.25rem;
+            .faq-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 3.5rem 1.25rem;
+            }
+
+            .faq-intro {
+                position: static;
+            }
+
+            .faq-band {
                 margin: 2rem 0;
             }
 
-            .lh-scores,
-            .lh-metrics {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
+            .faq-band .faq-section {
+                padding: 4rem 1.25rem;
             }
 
-            .lh-verdict {
+            .faq-intro p {
+                margin-bottom: 1.5rem;
+            }
+
+            .faq-item summary {
+                grid-template-columns: 1fr auto;
+                gap: 0.5rem 1rem;
+            }
+
+            .faq-tag {
+                grid-column: 1 / -1;
+                justify-self: start;
+                min-width: 0;
+            }
+
+            .faq-answer {
+                padding: 0 0.25rem 1.4rem 0.25rem;
+            }
+
+            .faq-cta {
                 flex-direction: column;
                 align-items: flex-start;
-                padding: 1.75rem 1.25rem;
-                gap: 1.5rem;
+                padding: 1.5rem 1.25rem;
             }
 
-            .lh-verdict .btn-primary {
+            .faq-cta .btn-primary {
                 width: 100%;
             }
 
@@ -1412,29 +1419,10 @@
             .footer-brand .footer-logo img {
                 max-width: 150px;
             }
-
-            .lh-form {
-                flex-direction: column;
-            }
-
-            .lh-ring {
-                width: 88px;
-                height: 88px;
-            }
-
-            .lh-ring-value {
-                font-size: 1.6rem;
-            }
-
-            .lh-score {
-                padding: 1.25rem 0.5rem;
-            }
-
-            .lh-score-label {
-                font-size: 0.8rem;
-            }
         }
     </style>
+    <!-- EmailJS för kontaktformuläret -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -1453,7 +1441,7 @@
             <ul>
                 <li><a href="#om-oss">Om oss</a></li>
                 <li><a href="#priser">Priser</a></li>
-                <li><a href="#testa">Testa din sida</a></li>
+                <li><a href="#faq">FAQ</a></li>
                 <li><a href="#kontakt">Kontakt</a></li>
             </ul>
         </nav>
@@ -1601,74 +1589,153 @@
         </div>
     </section>
 
-    <!-- LIGHTHOUSE / HEMSIDETEST SECTION -->
-    <section id="testa" class="lh-section">
-        <div class="lh-container">
-            <div class="lh-header">
-                <span class="lh-kicker">Gratis hemsidetest //</span>
-                <h2>Hur mår din hemsida?</h2>
-                <p>Klistra in länken till din hemsida så kör vi ett Lighthouse-test. Du får betyg på prestanda, tillgänglighet, bästa praxis och SEO.</p>
+    <!-- FAQ SECTION -->
+    <!-- Svar markerade med "KONTROLLERA" bygger på antaganden – stäm av mot era villkor. -->
+    <section id="faq" class="faq-band">
+    <div class="faq-section">
+        <div class="faq-intro">
+            <span class="faq-kicker">Vanliga frågor //</span>
+            <h2>Vilken plan passar dig?</h2>
+            <p>Här går vi djupare in på vad som ingår i Basic, Pro och Custom, så att du vet exakt vad du får innan du hör av dig.</p>
+
+            <div class="faq-filters" role="group" aria-label="Filtrera frågor">
+                <button type="button" class="faq-filter active" data-filter="alla">Alla</button>
+                <button type="button" class="faq-filter" data-filter="basic">Basic</button>
+                <button type="button" class="faq-filter" data-filter="pro">Pro</button>
+                <button type="button" class="faq-filter" data-filter="custom">Custom</button>
+                <button type="button" class="faq-filter" data-filter="allmant">Allmänt</button>
             </div>
-
-            <form class="lh-form" id="lhForm" novalidate>
-                <input type="text" id="lhUrl" class="lh-input" placeholder="dinhemsida.se" inputmode="url" autocomplete="url" aria-label="Länk till din hemsida" required>
-                <button type="submit" class="btn-primary lh-submit" id="lhSubmit">Testa sidan <span class="btn-arrow">→</span></button>
-            </form>
-
-            <div class="lh-strategy" role="group" aria-label="Välj enhet">
-                <button type="button" class="lh-strategy-btn active" data-strategy="mobile">Mobil</button>
-                <button type="button" class="lh-strategy-btn" data-strategy="desktop">Dator</button>
-            </div>
-
-            <div class="lh-status" id="lhStatus" aria-live="polite"></div>
-
-            <div class="lh-results" id="lhResults">
-                <div class="lh-tested-url" id="lhTestedUrl"></div>
-
-                <div class="lh-scores">
-                    <div class="lh-score" data-cat="performance">
-                        <div class="lh-ring">
-                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
-                            <div class="lh-ring-value">–</div>
-                        </div>
-                        <div class="lh-score-label">Prestanda</div>
-                    </div>
-                    <div class="lh-score" data-cat="accessibility">
-                        <div class="lh-ring">
-                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
-                            <div class="lh-ring-value">–</div>
-                        </div>
-                        <div class="lh-score-label">Tillgänglighet</div>
-                    </div>
-                    <div class="lh-score" data-cat="best-practices">
-                        <div class="lh-ring">
-                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
-                            <div class="lh-ring-value">–</div>
-                        </div>
-                        <div class="lh-score-label">Bästa praxis</div>
-                    </div>
-                    <div class="lh-score" data-cat="seo">
-                        <div class="lh-ring">
-                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
-                            <div class="lh-ring-value">–</div>
-                        </div>
-                        <div class="lh-score-label">SEO</div>
-                    </div>
-                </div>
-
-                <div class="lh-metrics" id="lhMetrics"></div>
-
-                <div class="lh-verdict" id="lhVerdict">
-                    <div>
-                        <h3 id="lhVerdictTitle"></h3>
-                        <p id="lhVerdictText"></p>
-                    </div>
-                    <a href="#kontakt" class="btn-primary" id="lhContactBtn">Kontakta oss <span class="btn-arrow">→</span></a>
-                </div>
-            </div>
-
-            <p class="lh-footnote">Testet körs via Google PageSpeed Insights och tar oftast 15–40 sekunder.</p>
         </div>
+
+        <div>
+            <div class="faq-list">
+
+                <!-- BASIC -->
+                <details class="faq-item" data-plan="basic">
+                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Vad ingår i Basic?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Med Basic designar och bygger vi din hemsida utifrån dina önskemål, hela vägen fram till lansering. Du berättar vad du behöver, vi tar fram ett förslag och formar sidan tills du är nöjd.</p>
+                        <!-- KONTROLLERA: lista vad som faktiskt ingår -->
+                        <ul>
+                            <li>Unik design – ingen färdig mall</li>
+                            <li>Anpassad för mobil, surfplatta och dator</li>
+                            <li>Hjälp med publicering vid lansering</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="basic">
+                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Varför står det "från" 10 000 kr?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>10 000 kr är startpriset för en mindre hemsida. Det slutliga priset beror på hur stort projektet är, till exempel hur många sidor och vilka funktioner du behöver.</p>
+                        <!-- KONTROLLERA: att ni ger fast pris innan start -->
+                        <p>Efter vårt första samtal får du ett tydligt pris innan vi börjar, så att det inte blir några överraskningar.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="basic">
+                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Vad händer efter lanseringen?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Basic gäller fram till lanseringen. Efter det ingår inget löpande underhåll eller vidareutveckling.</p>
+                        <!-- KONTROLLERA: hur ni hanterar ändringar efter lansering -->
+                        <p>Vill du göra ändringar senare kan du kontakta oss för en offert, eller gå över till <strong>Pro</strong> om du vill att vi tar hand om sidan löpande.</p>
+                    </div>
+                </details>
+
+                <!-- PRO -->
+                <details class="faq-item" data-plan="pro">
+                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad är skillnaden mellan Basic och Pro?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Med Basic bygger vi sidan och lämnar över den vid lansering. Med <strong>Pro</strong> blir vi din digitala partner över tid:</p>
+                        <ul>
+                            <li>Vi skräddarsyr hemsidan eller appen <strong>tillsammans</strong> med dig</li>
+                            <li>Projektet utvecklas under en längre period i stället för att vara klart vid ett datum</li>
+                            <li>Kontinuerligt underhåll och tydlig kommunikation även efter lansering</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="pro">
+                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad täcker startavgiften på 10 000 kr?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <!-- KONTROLLERA: vad startavgiften täcker och när månadsavgiften börjar -->
+                        <p>Startavgiften täcker arbetet med att ta fram och bygga den första versionen av din hemsida eller app. Den betalas en gång, i början av samarbetet.</p>
+                        <p>Månadsavgiften på 3 000 kr gäller sedan för det löpande arbetet.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="pro">
+                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad får jag för 3 000 kr i månaden?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <!-- KONTROLLERA: exakt vad som ingår i månadsavgiften -->
+                        <p>Månadsavgiften täcker det löpande arbetet med din sida, till exempel:</p>
+                        <ul>
+                            <li>Underhåll så att sidan fungerar som den ska</li>
+                            <li>Ändringar och uppdateringar av innehåll</li>
+                            <li>Fortsatt utveckling av nya delar och funktioner</li>
+                            <li>En kontaktperson som känner ditt projekt</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="pro">
+                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Finns det någon bindningstid?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <!-- KONTROLLERA: skriv era faktiska villkor om bindningstid och uppsägning -->
+                        <p>Bindningstid och uppsägningstid går vi igenom tillsammans och skriver in i avtalet innan vi startar, så att du vet exakt vad som gäller.</p>
+                    </div>
+                </details>
+
+                <!-- CUSTOM -->
+                <details class="faq-item" data-plan="custom">
+                    <summary><span class="faq-tag">Custom</span><span class="faq-question">När passar Custom?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Custom är till för projekt som inte passar in i Basic eller Pro. Det kan till exempel vara:</p>
+                        <ul>
+                            <li>En app eller ett större system</li>
+                            <li>Ett helt varumärkeskoncept, inte bara en hemsida</li>
+                            <li>Ett projekt med speciella krav på funktioner eller tidsplan</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="custom">
+                    <summary><span class="faq-tag">Custom</span><span class="faq-question">Hur sätts priset för Custom?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Priset varierar eftersom varje Custom-projekt ser olika ut. Vi börjar med ett samtal om vad du vill uppnå, och sedan får du ett förslag med upplägg och pris som är anpassat efter just ditt projekt.</p>
+                    </div>
+                </details>
+
+                <!-- ALLMÄNT -->
+                <details class="faq-item" data-plan="allmant">
+                    <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Hur lång tid tar det att bygga en hemsida?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Det beror på hur stort projektet är. Vi lägger till den mänskliga faktorn för en unik design, men har ändå nästan lika kort produktionstid som AI-tjänsterna. Du får en tidsplan när vi har gått igenom ditt projekt.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="allmant">
+                    <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Kan jag byta plan senare?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <!-- KONTROLLERA: att det går att byta plan -->
+                        <p>Ja. Har du börjat med Basic och vill ha löpande hjälp efter lanseringen kan du gå över till Pro. Hör av dig så hittar vi ett upplägg som passar.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="allmant">
+                    <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Hur kommer vi igång?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Välj den plan som låter mest rätt och fyll i kontaktformuläret längre ner. Berätta kort om din idé, så återkommer vi för att boka ett första samtal. Är du osäker på vilken plan som passar hjälper vi dig att välja.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-cta">
+                <p><strong>Hittade du inte svaret?</strong>Mejla oss på fenrac.se@gmail.com så svarar vi personligen.</p>
+                <a href="mailto:fenrac.se@gmail.com?subject=Fr%C3%A5ga%20om%20prisplaner" class="btn-primary">Ställ en fråga <span class="btn-arrow">→</span></a>
+            </div>
+        </div>
+    </div>
     </section>
 
     <!-- CONTACT SECTION -->
@@ -1676,7 +1743,7 @@
         <h2>Hör av dig</h2>
         <p>Har du ett projekt i åtanke eller vill du förbättra något nuvarande? Skriv!</p>
         
-        <form class="contact-form" onsubmit="event.preventDefault(); alert('Tack för ditt meddelande! Fenrac AB återkommer inom kort.');">
+        <form class="contact-form" id="contactForm">
             <div class="form-group">
                 <label for="plan-select">Välj Prisplan *</label>
                 <select id="plan-select" class="form-control" required>
@@ -1698,7 +1765,8 @@
                 <label for="message">Meddelande</label>
                 <textarea id="message" class="form-control" placeholder="Berätta om din idé..." required></textarea>
             </div>
-            <button type="submit" class="btn-primary" style="margin-top: 0.5rem; width: 100%; justify-content: center;">Skicka meddelande</button>
+            <button type="submit" class="btn-primary" id="contactSubmit" style="margin-top: 0.5rem; width: 100%; justify-content: center;">Skicka meddelande</button>
+            <p class="form-status" id="contactStatus" role="status" aria-live="polite"></p>
         </form>
     </section>
 
@@ -1716,7 +1784,7 @@
                     <li><a href="#om-oss">Om Oss</a></li>
                     <li><a href="#projekt">Våra Projekt</a></li>
                     <li><a href="#priser">Priser</a></li>
-                    <li><a href="#testa">Testa din sida</a></li>
+                    <li><a href="#faq">Vanliga frågor</a></li>
                     <li><a href="#kontakt">Kontakt</a></li>
                 </ul>
             </div>
@@ -1725,7 +1793,7 @@
                 <h4>Kontakt & Info</h4>
                 <ul>
                     <li><a href="#kontakt">Starta ett projekt</a></li>
-                    <li><a href="mailto:info@fenrac.se">info@fenrac.se</a></li>
+                    <li><a href="mailto:fenrac.se@gmail.com">fenrac.se@gmail.com</a></li>
                     <li><span style="color: var(--accent-yellow);">Est. 2026 // Sweden</span></li>
                 </ul>
             </div>
@@ -1887,219 +1955,85 @@
             });
 
             // =========================================================
-            // LIGHTHOUSE-TEST (Google PageSpeed Insights API v5)
+            // KONTAKTFORMULÄR VIA EMAILJS (kontot fenrac.se@gmail.com)
+            // Fyll i värdena från emailjs.com:
+            //   publicKey  → Account → General → Public Key
+            //   serviceId  → Email Services (t.ex. service_xxxxxxx)
+            //   templateId → Email Templates (t.ex. template_xxxxxxx)
+            // Mallen kan använda {{plan}}, {{name}}, {{email}} och {{message}}.
             // =========================================================
-            // Valfritt men rekommenderat: lägg in en gratis API-nyckel från
-            // Google Cloud (PageSpeed Insights API) för att slippa delad kvot.
-            const PSI_API_KEY = '';
-            const GOOD_SCORE = 90; // Under detta visas "Kontakta oss"-rutan
-
-            const lhForm = document.getElementById('lhForm');
-            const lhUrlInput = document.getElementById('lhUrl');
-            const lhSubmit = document.getElementById('lhSubmit');
-            const lhStatus = document.getElementById('lhStatus');
-            const lhResults = document.getElementById('lhResults');
-            const lhTestedUrl = document.getElementById('lhTestedUrl');
-            const lhMetrics = document.getElementById('lhMetrics');
-            const lhVerdict = document.getElementById('lhVerdict');
-            const lhVerdictTitle = document.getElementById('lhVerdictTitle');
-            const lhVerdictText = document.getElementById('lhVerdictText');
-            const lhContactBtn = document.getElementById('lhContactBtn');
-            const strategyButtons = document.querySelectorAll('.lh-strategy-btn');
-
-            const CATEGORY_NAMES = {
-                'performance': 'Prestanda',
-                'accessibility': 'Tillgänglighet',
-                'best-practices': 'Bästa praxis',
-                'seo': 'SEO'
+            const EMAILJS_CONFIG = {
+                publicKey: 'djdPQgD_vLZyvcXC-',
+                serviceId: 'service_6p3snwx',
+                templateId: 'template_nvw4yds'
             };
+            const FALLBACK_EMAIL = 'fenrac.se@gmail.com';
 
-            const METRICS = [
-                { id: 'first-contentful-paint', name: 'First Contentful Paint' },
-                { id: 'largest-contentful-paint', name: 'Largest Contentful Paint' },
-                { id: 'total-blocking-time', name: 'Total Blocking Time' },
-                { id: 'cumulative-layout-shift', name: 'Cumulative Layout Shift' }
-            ];
+            const contactForm = document.getElementById('contactForm');
+            const contactSubmit = document.getElementById('contactSubmit');
+            const contactStatus = document.getElementById('contactStatus');
+            const emailjsReady = window.emailjs && EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId;
 
-            let strategy = 'mobile';
-            let lastResult = null;
-
-            strategyButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    strategyButtons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    strategy = btn.getAttribute('data-strategy');
-                });
-            });
-
-            function normalizeUrl(raw) {
-                let value = raw.trim();
-                if (!value) return null;
-                if (!/^https?:\/\//i.test(value)) value = 'https://' + value;
-                try {
-                    const u = new URL(value);
-                    if (!u.hostname.includes('.')) return null;
-                    return u.href;
-                } catch (e) {
-                    return null;
-                }
+            if (emailjsReady) {
+                emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
             }
 
-            function scoreClass(score) {
-                if (score >= 90) return 'lh-good';
-                if (score >= 50) return 'lh-avg';
-                return 'lh-bad';
+            function setContactStatus(text, type) {
+                contactStatus.textContent = text;
+                contactStatus.className = 'form-status' + (type ? ' ' + type : '');
             }
 
-            function setStatus(text, isError, loading) {
-                lhStatus.className = 'lh-status' + (isError ? ' error' : '');
-                lhStatus.innerHTML = '';
-                if (loading) {
-                    const s = document.createElement('span');
-                    s.className = 'lh-spinner';
-                    lhStatus.appendChild(s);
-                }
-                lhStatus.appendChild(document.createTextNode(text));
-            }
-
-            function resetRings() {
-                document.querySelectorAll('.lh-score').forEach(card => {
-                    const fg = card.querySelector('.lh-ring-fg');
-                    const val = card.querySelector('.lh-ring-value');
-                    fg.style.strokeDashoffset = 289;
-                    fg.classList.remove('lh-good', 'lh-avg', 'lh-bad');
-                    val.classList.remove('lh-good', 'lh-avg', 'lh-bad');
-                    val.textContent = '–';
-                });
-            }
-
-            function renderResults(url, data) {
-                const cats = data.lighthouseResult.categories;
-                const audits = data.lighthouseResult.audits;
-                const scores = {};
-
-                resetRings();
-                lhResults.classList.add('visible');
-                lhTestedUrl.innerHTML = '';
-                lhTestedUrl.appendChild(document.createTextNode('Resultat för '));
-                const strong = document.createElement('strong');
-                strong.textContent = url;
-                lhTestedUrl.appendChild(strong);
-                lhTestedUrl.appendChild(document.createTextNode(' (' + (strategy === 'mobile' ? 'mobil' : 'dator') + ')'));
-
-                document.querySelectorAll('.lh-score').forEach(card => {
-                    const key = card.getAttribute('data-cat');
-                    const raw = cats[key] && typeof cats[key].score === 'number' ? cats[key].score : null;
-                    const fg = card.querySelector('.lh-ring-fg');
-                    const val = card.querySelector('.lh-ring-value');
-                    if (raw === null) {
-                        val.textContent = '–';
-                        return;
-                    }
-                    const score = Math.round(raw * 100);
-                    scores[key] = score;
-                    const cls = scoreClass(score);
-                    fg.classList.add(cls);
-                    val.classList.add(cls);
-                    val.textContent = score;
-                    requestAnimationFrame(() => {
-                        fg.style.strokeDashoffset = 289 - (289 * score / 100);
-                    });
-                });
-
-                lhMetrics.innerHTML = '';
-                METRICS.forEach(m => {
-                    const a = audits[m.id];
-                    if (!a) return;
-                    const wrap = document.createElement('div');
-                    wrap.className = 'lh-metric';
-                    const name = document.createElement('div');
-                    name.className = 'lh-metric-name';
-                    name.textContent = m.name;
-                    const value = document.createElement('div');
-                    value.className = 'lh-metric-value';
-                    if (typeof a.score === 'number') value.classList.add(scoreClass(Math.round(a.score * 100)));
-                    value.textContent = a.displayValue || '–';
-                    wrap.appendChild(name);
-                    wrap.appendChild(value);
-                    lhMetrics.appendChild(wrap);
-                });
-
-                const weak = Object.keys(scores).filter(k => scores[k] < GOOD_SCORE);
-                const critical = Object.keys(scores).filter(k => scores[k] < 50);
-                lastResult = { url, scores, weak };
-
-                if (weak.length === 0) {
-                    lhVerdict.classList.add('ok');
-                    lhVerdictTitle.textContent = 'Snyggt jobbat!';
-                    lhVerdictText.textContent = 'Din hemsida får höga betyg i alla kategorier. Vill du ta den vidare med ny design eller nya funktioner? Hör gärna av dig.';
-                    lhContactBtn.innerHTML = 'Hör av dig <span class="btn-arrow">→</span>';
-                } else {
-                    lhVerdict.classList.remove('ok');
-                    const names = weak.map(k => CATEGORY_NAMES[k]).join(', ');
-                    lhVerdictTitle.textContent = critical.length ? 'Din hemsida behöver hjälp' : 'Det finns mer att hämta';
-                    lhVerdictText.textContent = 'Din sida kan bli bättre inom: ' + names + '. En långsam eller svårhittad hemsida kostar besökare och kunder. Kontakta oss så hjälper vi dig!';
-                    lhContactBtn.innerHTML = 'Kontakta oss <span class="btn-arrow">→</span>';
-                }
-            }
-
-            async function runLighthouse(url) {
-                const params = new URLSearchParams({ url, strategy, locale: 'sv' });
-                ['performance', 'accessibility', 'best-practices', 'seo'].forEach(c => params.append('category', c));
-                if (PSI_API_KEY) params.append('key', PSI_API_KEY);
-
-                const res = await fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?' + params.toString());
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    const err = new Error((data.error && data.error.message) || 'Okänt fel');
-                    err.status = res.status;
-                    throw err;
-                }
-                if (!data.lighthouseResult) throw new Error('Inget resultat');
-                return data;
-            }
-
-            if (lhForm) {
-                lhForm.addEventListener('submit', async (e) => {
+            if (contactForm) {
+                contactForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    const url = normalizeUrl(lhUrlInput.value);
-                    if (!url) {
-                        setStatus('Skriv in en giltig adress, t.ex. dinhemsida.se', true);
-                        lhUrlInput.focus();
+
+                    if (!emailjsReady) {
+                        setContactStatus('Formuläret fungerar inte just nu. Mejla oss på ' + FALLBACK_EMAIL + '.', 'error');
                         return;
                     }
 
-                    lhSubmit.disabled = true;
-                    lhResults.classList.remove('visible');
-                    setStatus('Analyserar ' + url + ' … det här kan ta upp till en minut.', false, true);
+                    const planSelectEl = document.getElementById('plan-select');
+                    const params = {
+                        plan: planSelectEl.options[planSelectEl.selectedIndex].text,
+                        name: document.getElementById('name').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        message: document.getElementById('message').value.trim()
+                    };
+
+                    const originalText = contactSubmit.textContent;
+                    contactSubmit.disabled = true;
+                    contactSubmit.textContent = 'Skickar…';
+                    setContactStatus('');
 
                     try {
-                        const data = await runLighthouse(url);
-                        setStatus('');
-                        renderResults(url, data);
+                        await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params);
+                        contactForm.reset();
+                        setContactStatus('Tack för ditt meddelande! Fenrac AB återkommer inom kort.', 'success');
                     } catch (err) {
-                        if (err.status === 429) {
-                            setStatus('Testtjänsten är överbelastad just nu. Försök igen om en stund.', true);
-                        } else if (err.status === 400 || err.status === 500) {
-                            setStatus('Vi kunde inte nå sidan. Kontrollera att adressen stämmer och att sidan är publik.', true);
-                        } else {
-                            setStatus('Något gick fel med testet. Försök igen.', true);
-                        }
+                        setContactStatus('Något gick fel när meddelandet skulle skickas. Försök igen eller mejla oss på ' + FALLBACK_EMAIL + '.', 'error');
                     } finally {
-                        lhSubmit.disabled = false;
+                        contactSubmit.disabled = false;
+                        contactSubmit.textContent = originalText;
                     }
                 });
             }
 
-            // Fyll i kontaktformuläret med testresultatet
-            if (lhContactBtn) {
-                lhContactBtn.addEventListener('click', () => {
-                    const msg = document.getElementById('message');
-                    if (!msg || !lastResult) return;
-                    const lines = Object.keys(lastResult.scores).map(k => '- ' + CATEGORY_NAMES[k] + ': ' + lastResult.scores[k] + '/100');
-                    msg.value = 'Hej! Jag testade min hemsida ' + lastResult.url + ' och fick:\n' + lines.join('\n') + '\n\nJag vill gärna ha hjälp att förbättra den.';
+            // FAQ: filtrera frågor per prisplan
+            const faqFilters = document.querySelectorAll('.faq-filter');
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqFilters.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.getAttribute('data-filter');
+                    faqFilters.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    faqItems.forEach(item => {
+                        const match = filter === 'alla' || item.getAttribute('data-plan') === filter;
+                        item.hidden = !match;
+                        if (!match) item.open = false;
+                    });
                 });
-            }
+            });
         });
     </script>
 </body>
