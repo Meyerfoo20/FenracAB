@@ -722,6 +722,330 @@
             background-color: #ffd838;
         }
 
+        /* LIGHTHOUSE / HEMSIDETEST SECTION */
+        .lh-section {
+            width: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            border-top: 2px solid var(--accent-yellow);
+            border-bottom: 2px solid var(--accent-yellow);
+            padding: 6rem 4rem;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            margin: 3rem 0;
+        }
+
+        .lh-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .lh-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .lh-kicker {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-yellow);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .lh-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .lh-header p {
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-light-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .lh-form {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 720px;
+            margin: 0 auto 1rem auto;
+        }
+
+        .lh-input {
+            flex: 1;
+            min-width: 0;
+            background: rgba(244, 238, 228, 0.06);
+            border: 1px solid rgba(244, 238, 228, 0.2);
+            color: var(--text-light);
+            padding: 0.9rem 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            -webkit-appearance: none;
+        }
+
+        .lh-input::placeholder {
+            color: var(--text-light-muted);
+        }
+
+        .lh-input:focus {
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 0 3px rgba(243, 198, 20, 0.15);
+        }
+
+        .lh-submit {
+            background-color: var(--accent-yellow);
+            color: var(--bg-dark);
+            border-color: var(--accent-yellow);
+            white-space: nowrap;
+        }
+
+        .lh-submit:hover {
+            background-color: #ffd838;
+        }
+
+        .lh-submit:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
+        .lh-submit .btn-arrow {
+            color: var(--bg-dark);
+        }
+
+        .lh-strategy {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .lh-strategy-btn {
+            background: transparent;
+            border: 1px solid rgba(244, 238, 228, 0.2);
+            color: var(--text-light-muted);
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.5rem 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 40px;
+        }
+
+        .lh-strategy-btn.active {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            background: rgba(243, 198, 20, 0.08);
+        }
+
+        .lh-status {
+            text-align: center;
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-light-muted);
+            min-height: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .lh-status.error {
+            color: #ff7a6e;
+        }
+
+        .lh-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(243, 198, 20, 0.25);
+            border-top-color: var(--accent-yellow);
+            border-radius: 50%;
+            animation: lh-spin 0.8s linear infinite;
+            vertical-align: -2px;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes lh-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .lh-results {
+            display: none;
+        }
+
+        .lh-results.visible {
+            display: block;
+        }
+
+        .lh-tested-url {
+            text-align: center;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+            color: var(--text-light-muted);
+            margin-bottom: 2rem;
+            word-break: break-all;
+        }
+
+        .lh-tested-url strong {
+            color: var(--text-light);
+        }
+
+        .lh-scores {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .lh-score {
+            border: 2px dashed rgba(243, 198, 20, 0.35);
+            background-color: rgba(0, 0, 0, 0.25);
+            border-radius: 6px;
+            padding: 1.75rem 1rem;
+            text-align: center;
+        }
+
+        .lh-ring {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 1rem auto;
+        }
+
+        .lh-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .lh-ring-bg {
+            fill: none;
+            stroke: rgba(244, 238, 228, 0.1);
+            stroke-width: 8;
+        }
+
+        .lh-ring-fg {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 289;
+            stroke-dashoffset: 289;
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lh-ring-value {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier Prime', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .lh-score-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .lh-good { color: #3ddc84; stroke: #3ddc84; }
+        .lh-avg  { color: #ffb020; stroke: #ffb020; }
+        .lh-bad  { color: #ff6b5e; stroke: #ff6b5e; }
+
+        .lh-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .lh-metric {
+            border-top: 1px solid rgba(244, 238, 228, 0.15);
+            padding-top: 0.9rem;
+        }
+
+        .lh-metric-name {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.78rem;
+            color: var(--text-light-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.35rem;
+        }
+
+        .lh-metric-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .lh-verdict {
+            border: 2px solid var(--accent-yellow);
+            border-radius: 8px;
+            padding: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            background: rgba(243, 198, 20, 0.06);
+        }
+
+        .lh-verdict.ok {
+            border-color: #3ddc84;
+            background: rgba(61, 220, 132, 0.06);
+        }
+
+        .lh-verdict h3 {
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.6rem;
+            color: var(--accent-yellow);
+        }
+
+        .lh-verdict.ok h3 {
+            color: #3ddc84;
+        }
+
+        .lh-verdict p {
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-light-muted);
+            line-height: 1.6;
+        }
+
+        .lh-verdict .btn-primary {
+            background-color: var(--accent-yellow);
+            color: var(--bg-dark);
+            border-color: var(--accent-yellow);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .lh-verdict .btn-primary .btn-arrow {
+            color: var(--bg-dark);
+        }
+
+        .lh-footnote {
+            text-align: center;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.78rem;
+            color: var(--text-light-muted);
+            margin-top: 1.5rem;
+            opacity: 0.8;
+        }
+
         /* CONTACT SECTION */
         .contact-section {
             padding: 5rem 4rem 7rem 4rem;
@@ -1008,8 +1332,30 @@
                 grid-template-columns: 35px 1fr auto; 
             }
 
-            .contact-section { 
-                padding: 3.5rem 1.25rem 4.5rem 1.25rem; 
+            .contact-section {
+                padding: 3.5rem 1.25rem 4.5rem 1.25rem;
+            }
+
+            .lh-section {
+                padding: 4rem 1.25rem;
+                margin: 2rem 0;
+            }
+
+            .lh-scores,
+            .lh-metrics {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .lh-verdict {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.75rem 1.25rem;
+                gap: 1.5rem;
+            }
+
+            .lh-verdict .btn-primary {
+                width: 100%;
             }
 
             footer { 
@@ -1066,6 +1412,27 @@
             .footer-brand .footer-logo img {
                 max-width: 150px;
             }
+
+            .lh-form {
+                flex-direction: column;
+            }
+
+            .lh-ring {
+                width: 88px;
+                height: 88px;
+            }
+
+            .lh-ring-value {
+                font-size: 1.6rem;
+            }
+
+            .lh-score {
+                padding: 1.25rem 0.5rem;
+            }
+
+            .lh-score-label {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -1086,6 +1453,7 @@
             <ul>
                 <li><a href="#om-oss">Om oss</a></li>
                 <li><a href="#priser">Priser</a></li>
+                <li><a href="#testa">Testa din sida</a></li>
                 <li><a href="#kontakt">Kontakt</a></li>
             </ul>
         </nav>
@@ -1233,6 +1601,76 @@
         </div>
     </section>
 
+    <!-- LIGHTHOUSE / HEMSIDETEST SECTION -->
+    <section id="testa" class="lh-section">
+        <div class="lh-container">
+            <div class="lh-header">
+                <span class="lh-kicker">Gratis hemsidetest //</span>
+                <h2>Hur mår din hemsida?</h2>
+                <p>Klistra in länken till din hemsida så kör vi ett Lighthouse-test. Du får betyg på prestanda, tillgänglighet, bästa praxis och SEO.</p>
+            </div>
+
+            <form class="lh-form" id="lhForm" novalidate>
+                <input type="text" id="lhUrl" class="lh-input" placeholder="dinhemsida.se" inputmode="url" autocomplete="url" aria-label="Länk till din hemsida" required>
+                <button type="submit" class="btn-primary lh-submit" id="lhSubmit">Testa sidan <span class="btn-arrow">→</span></button>
+            </form>
+
+            <div class="lh-strategy" role="group" aria-label="Välj enhet">
+                <button type="button" class="lh-strategy-btn active" data-strategy="mobile">Mobil</button>
+                <button type="button" class="lh-strategy-btn" data-strategy="desktop">Dator</button>
+            </div>
+
+            <div class="lh-status" id="lhStatus" aria-live="polite"></div>
+
+            <div class="lh-results" id="lhResults">
+                <div class="lh-tested-url" id="lhTestedUrl"></div>
+
+                <div class="lh-scores">
+                    <div class="lh-score" data-cat="performance">
+                        <div class="lh-ring">
+                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
+                            <div class="lh-ring-value">–</div>
+                        </div>
+                        <div class="lh-score-label">Prestanda</div>
+                    </div>
+                    <div class="lh-score" data-cat="accessibility">
+                        <div class="lh-ring">
+                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
+                            <div class="lh-ring-value">–</div>
+                        </div>
+                        <div class="lh-score-label">Tillgänglighet</div>
+                    </div>
+                    <div class="lh-score" data-cat="best-practices">
+                        <div class="lh-ring">
+                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
+                            <div class="lh-ring-value">–</div>
+                        </div>
+                        <div class="lh-score-label">Bästa praxis</div>
+                    </div>
+                    <div class="lh-score" data-cat="seo">
+                        <div class="lh-ring">
+                            <svg viewBox="0 0 110 110"><circle class="lh-ring-bg" cx="55" cy="55" r="46"></circle><circle class="lh-ring-fg" cx="55" cy="55" r="46"></circle></svg>
+                            <div class="lh-ring-value">–</div>
+                        </div>
+                        <div class="lh-score-label">SEO</div>
+                    </div>
+                </div>
+
+                <div class="lh-metrics" id="lhMetrics"></div>
+
+                <div class="lh-verdict" id="lhVerdict">
+                    <div>
+                        <h3 id="lhVerdictTitle"></h3>
+                        <p id="lhVerdictText"></p>
+                    </div>
+                    <a href="#kontakt" class="btn-primary" id="lhContactBtn">Kontakta oss <span class="btn-arrow">→</span></a>
+                </div>
+            </div>
+
+            <p class="lh-footnote">Testet körs via Google PageSpeed Insights och tar oftast 15–40 sekunder.</p>
+        </div>
+    </section>
+
     <!-- CONTACT SECTION -->
     <section id="kontakt" class="contact-section">
         <h2>Hör av dig</h2>
@@ -1278,6 +1716,7 @@
                     <li><a href="#om-oss">Om Oss</a></li>
                     <li><a href="#projekt">Våra Projekt</a></li>
                     <li><a href="#priser">Priser</a></li>
+                    <li><a href="#testa">Testa din sida</a></li>
                     <li><a href="#kontakt">Kontakt</a></li>
                 </ul>
             </div>
@@ -1446,6 +1885,221 @@
                     }
                 });
             });
+
+            // =========================================================
+            // LIGHTHOUSE-TEST (Google PageSpeed Insights API v5)
+            // =========================================================
+            // Valfritt men rekommenderat: lägg in en gratis API-nyckel från
+            // Google Cloud (PageSpeed Insights API) för att slippa delad kvot.
+            const PSI_API_KEY = '';
+            const GOOD_SCORE = 90; // Under detta visas "Kontakta oss"-rutan
+
+            const lhForm = document.getElementById('lhForm');
+            const lhUrlInput = document.getElementById('lhUrl');
+            const lhSubmit = document.getElementById('lhSubmit');
+            const lhStatus = document.getElementById('lhStatus');
+            const lhResults = document.getElementById('lhResults');
+            const lhTestedUrl = document.getElementById('lhTestedUrl');
+            const lhMetrics = document.getElementById('lhMetrics');
+            const lhVerdict = document.getElementById('lhVerdict');
+            const lhVerdictTitle = document.getElementById('lhVerdictTitle');
+            const lhVerdictText = document.getElementById('lhVerdictText');
+            const lhContactBtn = document.getElementById('lhContactBtn');
+            const strategyButtons = document.querySelectorAll('.lh-strategy-btn');
+
+            const CATEGORY_NAMES = {
+                'performance': 'Prestanda',
+                'accessibility': 'Tillgänglighet',
+                'best-practices': 'Bästa praxis',
+                'seo': 'SEO'
+            };
+
+            const METRICS = [
+                { id: 'first-contentful-paint', name: 'First Contentful Paint' },
+                { id: 'largest-contentful-paint', name: 'Largest Contentful Paint' },
+                { id: 'total-blocking-time', name: 'Total Blocking Time' },
+                { id: 'cumulative-layout-shift', name: 'Cumulative Layout Shift' }
+            ];
+
+            let strategy = 'mobile';
+            let lastResult = null;
+
+            strategyButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    strategyButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    strategy = btn.getAttribute('data-strategy');
+                });
+            });
+
+            function normalizeUrl(raw) {
+                let value = raw.trim();
+                if (!value) return null;
+                if (!/^https?:\/\//i.test(value)) value = 'https://' + value;
+                try {
+                    const u = new URL(value);
+                    if (!u.hostname.includes('.')) return null;
+                    return u.href;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function scoreClass(score) {
+                if (score >= 90) return 'lh-good';
+                if (score >= 50) return 'lh-avg';
+                return 'lh-bad';
+            }
+
+            function setStatus(text, isError, loading) {
+                lhStatus.className = 'lh-status' + (isError ? ' error' : '');
+                lhStatus.innerHTML = '';
+                if (loading) {
+                    const s = document.createElement('span');
+                    s.className = 'lh-spinner';
+                    lhStatus.appendChild(s);
+                }
+                lhStatus.appendChild(document.createTextNode(text));
+            }
+
+            function resetRings() {
+                document.querySelectorAll('.lh-score').forEach(card => {
+                    const fg = card.querySelector('.lh-ring-fg');
+                    const val = card.querySelector('.lh-ring-value');
+                    fg.style.strokeDashoffset = 289;
+                    fg.classList.remove('lh-good', 'lh-avg', 'lh-bad');
+                    val.classList.remove('lh-good', 'lh-avg', 'lh-bad');
+                    val.textContent = '–';
+                });
+            }
+
+            function renderResults(url, data) {
+                const cats = data.lighthouseResult.categories;
+                const audits = data.lighthouseResult.audits;
+                const scores = {};
+
+                resetRings();
+                lhResults.classList.add('visible');
+                lhTestedUrl.innerHTML = '';
+                lhTestedUrl.appendChild(document.createTextNode('Resultat för '));
+                const strong = document.createElement('strong');
+                strong.textContent = url;
+                lhTestedUrl.appendChild(strong);
+                lhTestedUrl.appendChild(document.createTextNode(' (' + (strategy === 'mobile' ? 'mobil' : 'dator') + ')'));
+
+                document.querySelectorAll('.lh-score').forEach(card => {
+                    const key = card.getAttribute('data-cat');
+                    const raw = cats[key] && typeof cats[key].score === 'number' ? cats[key].score : null;
+                    const fg = card.querySelector('.lh-ring-fg');
+                    const val = card.querySelector('.lh-ring-value');
+                    if (raw === null) {
+                        val.textContent = '–';
+                        return;
+                    }
+                    const score = Math.round(raw * 100);
+                    scores[key] = score;
+                    const cls = scoreClass(score);
+                    fg.classList.add(cls);
+                    val.classList.add(cls);
+                    val.textContent = score;
+                    requestAnimationFrame(() => {
+                        fg.style.strokeDashoffset = 289 - (289 * score / 100);
+                    });
+                });
+
+                lhMetrics.innerHTML = '';
+                METRICS.forEach(m => {
+                    const a = audits[m.id];
+                    if (!a) return;
+                    const wrap = document.createElement('div');
+                    wrap.className = 'lh-metric';
+                    const name = document.createElement('div');
+                    name.className = 'lh-metric-name';
+                    name.textContent = m.name;
+                    const value = document.createElement('div');
+                    value.className = 'lh-metric-value';
+                    if (typeof a.score === 'number') value.classList.add(scoreClass(Math.round(a.score * 100)));
+                    value.textContent = a.displayValue || '–';
+                    wrap.appendChild(name);
+                    wrap.appendChild(value);
+                    lhMetrics.appendChild(wrap);
+                });
+
+                const weak = Object.keys(scores).filter(k => scores[k] < GOOD_SCORE);
+                const critical = Object.keys(scores).filter(k => scores[k] < 50);
+                lastResult = { url, scores, weak };
+
+                if (weak.length === 0) {
+                    lhVerdict.classList.add('ok');
+                    lhVerdictTitle.textContent = 'Snyggt jobbat!';
+                    lhVerdictText.textContent = 'Din hemsida får höga betyg i alla kategorier. Vill du ta den vidare med ny design eller nya funktioner? Hör gärna av dig.';
+                    lhContactBtn.innerHTML = 'Hör av dig <span class="btn-arrow">→</span>';
+                } else {
+                    lhVerdict.classList.remove('ok');
+                    const names = weak.map(k => CATEGORY_NAMES[k]).join(', ');
+                    lhVerdictTitle.textContent = critical.length ? 'Din hemsida behöver hjälp' : 'Det finns mer att hämta';
+                    lhVerdictText.textContent = 'Din sida kan bli bättre inom: ' + names + '. En långsam eller svårhittad hemsida kostar besökare och kunder. Kontakta oss så hjälper vi dig!';
+                    lhContactBtn.innerHTML = 'Kontakta oss <span class="btn-arrow">→</span>';
+                }
+            }
+
+            async function runLighthouse(url) {
+                const params = new URLSearchParams({ url, strategy, locale: 'sv' });
+                ['performance', 'accessibility', 'best-practices', 'seo'].forEach(c => params.append('category', c));
+                if (PSI_API_KEY) params.append('key', PSI_API_KEY);
+
+                const res = await fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?' + params.toString());
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const err = new Error((data.error && data.error.message) || 'Okänt fel');
+                    err.status = res.status;
+                    throw err;
+                }
+                if (!data.lighthouseResult) throw new Error('Inget resultat');
+                return data;
+            }
+
+            if (lhForm) {
+                lhForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const url = normalizeUrl(lhUrlInput.value);
+                    if (!url) {
+                        setStatus('Skriv in en giltig adress, t.ex. dinhemsida.se', true);
+                        lhUrlInput.focus();
+                        return;
+                    }
+
+                    lhSubmit.disabled = true;
+                    lhResults.classList.remove('visible');
+                    setStatus('Analyserar ' + url + ' … det här kan ta upp till en minut.', false, true);
+
+                    try {
+                        const data = await runLighthouse(url);
+                        setStatus('');
+                        renderResults(url, data);
+                    } catch (err) {
+                        if (err.status === 429) {
+                            setStatus('Testtjänsten är överbelastad just nu. Försök igen om en stund.', true);
+                        } else if (err.status === 400 || err.status === 500) {
+                            setStatus('Vi kunde inte nå sidan. Kontrollera att adressen stämmer och att sidan är publik.', true);
+                        } else {
+                            setStatus('Något gick fel med testet. Försök igen.', true);
+                        }
+                    } finally {
+                        lhSubmit.disabled = false;
+                    }
+                });
+            }
+
+            // Fyll i kontaktformuläret med testresultatet
+            if (lhContactBtn) {
+                lhContactBtn.addEventListener('click', () => {
+                    const msg = document.getElementById('message');
+                    if (!msg || !lastResult) return;
+                    const lines = Object.keys(lastResult.scores).map(k => '- ' + CATEGORY_NAMES[k] + ': ' + lastResult.scores[k] + '/100');
+                    msg.value = 'Hej! Jag testade min hemsida ' + lastResult.url + ' och fick:\n' + lines.join('\n') + '\n\nJag vill gärna ha hjälp att förbättra den.';
+                });
+            }
         });
     </script>
 </body>
