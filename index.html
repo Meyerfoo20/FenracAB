@@ -65,10 +65,20 @@
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
+            z-index: 1000;
+        }
+
+        /* Blur-bakgrunden ligger på ett pseudo-element. Med backdrop-filter direkt på
+           header blir header "containing block" för fixed-element (menyn + overlay),
+           vilket gör att mobilmenyn klipps till headerns höjd i Safari/iOS. */
+        header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
             background-color: rgba(244, 238, 228, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
+            z-index: -1;
         }
 
         .logo {
@@ -80,6 +90,7 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+            position: relative;
             z-index: 1002;
         }
 
@@ -155,7 +166,7 @@
         }
 
         .mobile-menu-btn.active span:nth-child(1) {
-            transform: translateY(9.5px) rotate(45deg);
+            transform: translateY(9.75px) rotate(45deg);
         }
 
         .mobile-menu-btn.active span:nth-child(2) {
@@ -163,7 +174,7 @@
         }
 
         .mobile-menu-btn.active span:nth-child(3) {
-            transform: translateY(-9.5px) rotate(-45deg);
+            transform: translateY(-9.75px) rotate(-45deg);
         }
 
         /* MOBIL MENY OVERLAY BAKGRUND */
@@ -1245,7 +1256,9 @@
                 background-color: var(--bg-color);
                 box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
                 padding: 5.5rem 2rem 2rem 2rem;
-                transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+                transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.35s;
+                visibility: hidden;
+                overflow-y: auto;
                 z-index: 1001;
                 display: flex;
                 flex-direction: column;
@@ -1253,6 +1266,8 @@
 
             nav.nav-open {
                 right: 0;
+                visibility: visible;
+                transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;
             }
 
             nav ul {
@@ -1821,12 +1836,14 @@
                     menuOverlay.classList.add('active');
                     document.body.classList.add('menu-open');
                     mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                    mobileMenuBtn.setAttribute('aria-label', 'Stäng meny');
                 } else {
                     mobileMenuBtn.classList.remove('active');
                     navMenu.classList.remove('nav-open');
                     menuOverlay.classList.remove('active');
                     document.body.classList.remove('menu-open');
                     mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    mobileMenuBtn.setAttribute('aria-label', 'Öppna meny');
                 }
             }
 
@@ -1839,6 +1856,19 @@
 
                 navMenu.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => toggleMenu(false));
+                });
+
+                // Stäng med Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && navMenu.classList.contains('nav-open')) {
+                        toggleMenu(false);
+                        mobileMenuBtn.focus();
+                    }
+                });
+
+                // Stäng om fönstret blir bredare än mobilbrytpunkten (t.ex. vid rotering)
+                window.matchMedia('(min-width: 951px)').addEventListener('change', (e) => {
+                    if (e.matches) toggleMenu(false);
                 });
             }
 
