@@ -1,2070 +1,334 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fenrac AB</title>
-    <link rel="icon" type="image/png" href="webb-logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #f4eee4; 
-            --bg-dark: #1a1816;
-            --accent-yellow: #f3c614;
-            --accent-gold: #d89f00;
-            --text-main: #1a1816;
-            --text-muted: #6c665c;
-            --text-light: #f4eee4;
-            --text-light-muted: #b0a99e;
-            --border-color: rgba(26, 24, 22, 0.12);
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
-            overflow-x: hidden;
-            position: relative;
-            width: 100%;
-        }
-
-        body.menu-open {
-            overflow: hidden;
-        }
-
-        /* Grit/Noise texture overlay */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 999;
-        }
-
-        /* STICKY HEADER */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 4rem;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        /* Blur-bakgrunden ligger på ett pseudo-element. Med backdrop-filter direkt på
-           header blir header "containing block" för fixed-element (menyn + overlay),
-           vilket gör att mobilmenyn klipps till headerns höjd i Safari/iOS. */
-        header::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-color: rgba(244, 238, 228, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: -1;
-        }
-
-        .logo {
-            font-family: 'Courier Prime', monospace;
-            font-weight: 700;
-            font-size: 1.8rem;
-            letter-spacing: -1px;
-            color: var(--text-main);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            position: relative;
-            z-index: 1002;
-        }
-
-        .logo img {
-            max-width: 155px;
-            height: auto;
-            display: block;
-        }
-
-        .logo span {
-            color: var(--accent-gold);
-        }
-
-        nav ul {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-            position: relative;
-            padding: 0.4rem 0;
-        }
-
-        nav a:hover {
-            color: var(--text-main);
-        }
-
-        nav a::after {
-            content: "";
-            position: absolute;
-            bottom: -1.1rem;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background-color: var(--accent-gold);
-            transition: width 0.3s ease, left 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        /* MOBILMENY KNAPP */
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 32px;
-            height: 22px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            z-index: 1002;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .mobile-menu-btn span {
-            width: 100%;
-            height: 2.5px;
-            background-color: var(--text-main);
-            border-radius: 2px;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            transform-origin: center;
-        }
-
-        .mobile-menu-btn.active span:nth-child(1) {
-            transform: translateY(9.75px) rotate(45deg);
-        }
-
-        .mobile-menu-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active span:nth-child(3) {
-            transform: translateY(-9.75px) rotate(-45deg);
-        }
-
-        /* MOBIL MENY OVERLAY BAKGRUND */
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(26, 24, 22, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: 1000;
-        }
-
-        .menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* HERO SECTION */
-        .hero {
-            min-height: calc(100vh - 85px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 4rem 1.5rem;
-            position: relative;
-            text-align: center;
-            overflow: hidden;
-        }
-
-        /* Ambient Glow behind Hero Animation */
-        .hero-glow {
-            position: absolute;
-            top: 42%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(700px, 90vw);
-            height: 280px;
-            background: radial-gradient(circle, rgba(216, 159, 0, 0.18) 0%, rgba(244, 238, 228, 0) 70%);
-            pointer-events: none;
-            filter: blur(40px);
-            z-index: 0;
-        }
-
-        /* PROJEKT VYKORT I HERO */
-        .hero-postcard {
-            position: absolute;
-            width: 210px;
-            background: #ffffff;
-            padding: 12px 12px 16px 12px;
-            border-radius: 6px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-            border: 1px solid rgba(26, 24, 22, 0.15);
-            text-decoration: none;
-            color: var(--text-main);
-            z-index: 2;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(40px) scale(0.9);
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .hero-postcard.loaded.postcard-1 {
-            opacity: 1;
-            transform: rotate(-7deg) translateY(0) scale(1);
-        }
-        .hero-postcard.loaded.postcard-2 {
-            opacity: 1;
-            transform: rotate(6deg) translateY(0) scale(1);
-        }
-        .hero-postcard.loaded.postcard-3 {
-            opacity: 1;
-            transform: rotate(-4deg) translateY(0) scale(1);
-        }
-
-        .hero-postcard img {
-            width: 100%;
-            height: 130px;
-            object-fit: cover;
-            border-radius: 3px;
-            display: block;
-            margin-bottom: 10px;
-            filter: contrast(1.03) brightness(0.98);
-        }
-
-        .postcard-caption {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Courier Prime', monospace;
-        }
-
-        .postcard-title {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .postcard-tag {
-            font-size: 0.72rem;
-            color: var(--accent-gold);
-            font-weight: 700;
-        }
-
-        .postcard-1 {
-            top: 14%;
-            left: 5%;
-        }
-
-        .postcard-2 {
-            top: 18%;
-            right: 6%;
-        }
-
-        .postcard-3 {
-            bottom: 6%;
-            right: 10%;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.5rem 1.2rem;
-            background: rgba(26, 24, 22, 0.05);
-            border: 1px solid rgba(216, 159, 0, 0.35);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.8rem;
-            letter-spacing: 1.5px;
-            color: var(--text-main);
-            margin-bottom: 2rem;
-            z-index: 3;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
-
-        .badge-dot {
-            width: 7px;
-            height: 7px;
-            background-color: var(--accent-gold);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-gold);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.4; transform: scale(0.9); }
-        }
-
-        .hero-animation-container {
-            width: 100%;
-            max-width: 1000px;
-            min-height: 110px;
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            user-select: none;
-            z-index: 3;
-            overflow: hidden;
-        }
-
-        .morph-stage {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            flex-wrap: nowrap;
-        }
-
-        .letter-char {
-            display: inline-block;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-main);
-            font-size: clamp(2rem, 7.5vw, 7rem);
-            letter-spacing: clamp(1px, 1vw, 6px);
-        }
-
-        .letter-char.accent {
-            color: var(--accent-gold);
-            text-shadow: 0 0 25px rgba(216, 159, 0, 0.35);
-        }
-
-        /* Skrivmaskins-markör */
-        .typewriter-cursor {
-            display: inline-block;
-            width: 0.22em;
-            height: 0.85em;
-            background-color: var(--accent-gold);
-            margin-left: 4px;
-            vertical-align: baseline;
-            animation: blink 0.7s infinite;
-            box-shadow: 0 0 12px rgba(216, 159, 0, 0.6);
-            border-radius: 1px;
-            transition: opacity 0.4s ease;
-        }
-
-        @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
-        .hero-title {
-            font-size: clamp(1.8rem, 4.5vw, 3.5rem);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            line-height: 1.15;
-            margin-bottom: 1.2rem;
-            z-index: 3;
-        }
-
-        .hero-title .highlight {
-            color: var(--accent-gold);
-            position: relative;
-            display: inline-block;
-        }
-
-        .hero-subtitle {
-            font-family: 'Courier Prime', monospace;
-            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-            color: var(--text-muted);
-            max-width: 620px;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
-            z-index: 3;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            z-index: 3;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .btn-primary {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            padding: 1.1rem 2.2rem;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            border-radius: 4px;
-            border: 2px solid var(--bg-dark);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            cursor: pointer;
-            min-height: 48px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-            background-color: #2e2a27;
-        }
-
-        .btn-primary .btn-arrow {
-            color: var(--accent-yellow);
-            transition: transform 0.3s ease;
-        }
-
-        .btn-primary:hover .btn-arrow {
-            transform: translateX(4px);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-main);
-            padding: 1.1rem 2.2rem;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 48px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--text-main);
-            background: rgba(26, 24, 22, 0.05);
-        }
-
-        /* FULL WIDTH SECTION (ABOUT + PROJECTS) */
-        .full-width-section {
-            width: 100%;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            border-top: 2px solid var(--accent-yellow);
-            border-bottom: 2px solid var(--accent-yellow);
-            padding: 6rem 4rem;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-            margin: 3rem 0;
-        }
-
-        .full-width-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .about-content h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-            color: var(--accent-yellow);
-        }
-
-        .about-content p {
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-light-muted);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
-        }
-
-        .projects-box {
-            border: 2px dashed var(--accent-yellow);
-            padding: 2.5rem;
-            background-color: rgba(0, 0, 0, 0.25);
-            border-radius: 6px;
-        }
-
-        .projects-box-title {
-            font-family: 'Courier Prime', monospace;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--accent-yellow);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .track-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .track-item {
-            display: grid;
-            grid-template-columns: 40px 1fr auto;
-            align-items: center;
-            padding: 1rem 0.5rem;
-            border-bottom: 1px solid rgba(244, 238, 228, 0.15);
-            transition: padding-left 0.3s ease, background-color 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--text-light);
-            border-radius: 4px;
-        }
-
-        .track-item:hover, .track-item:active {
-            padding-left: 0.8rem;
-            background-color: rgba(243, 198, 20, 0.08);
-            border-color: var(--accent-yellow);
-        }
-
-        .track-num {
-            font-family: 'Courier Prime', monospace;
-            font-size: 1.1rem;
-            color: var(--accent-yellow);
-            font-weight: 700;
-        }
-
-        .track-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .track-desc {
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.8rem;
-            color: var(--text-light-muted);
-            text-align: right;
-            margin-right: 10px;
-        }
-
-        .arrow-indicator {
-            font-family: 'Permanent Marker', cursive;
-            color: var(--accent-yellow);
-            font-size: 1.3rem;
-            margin-left: 0.5rem;
-            display: inline-block;
-            transition: transform 0.2s ease;
-        }
-
-        .track-item:hover .arrow-indicator {
-            transform: translateX(-4px);
-        }
-
-        .highlight-track .track-name {
-            font-family: 'Permanent Marker', cursive;
-            font-size: 1.35rem;
-            color: var(--accent-yellow);
-        }
-
-        /* PRICING SECTION */
-        .pricing-section {
-            padding: 5rem 4rem;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .pricing-header {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-
-        .pricing-header h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            margin-bottom: 1rem;
-        }
-
-        .pricing-header p {
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            align-items: stretch;
-        }
-
-        .pricing-card {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 3rem 2.2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(26, 24, 22, 0.04);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(26, 24, 22, 0.08);
-            border-color: var(--accent-gold);
-        }
-
-        .pricing-card.featured {
-            background: var(--bg-dark);
-            color: var(--text-light);
-            border: 2px solid var(--accent-yellow);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -15px;
-            right: 25px;
-            background: var(--accent-yellow);
-            color: var(--bg-dark);
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 0.35rem 0.9rem;
-            border-radius: 50px;
-            letter-spacing: 1px;
-        }
-
-        .pricing-card h3 {
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            margin-bottom: 1rem;
-        }
-
-        .pricing-price {
-            font-family: 'Courier Prime', monospace;
-            font-size: 1.45rem;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-card.featured .pricing-price {
-            color: var(--accent-yellow);
-        }
-
-        .pricing-desc {
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            flex-grow: 1;
-        }
-
-        .pricing-card.featured .pricing-desc {
-            color: var(--text-light-muted);
-        }
-
-        .pricing-card .btn-primary, 
-        .pricing-card .btn-secondary {
-            width: 100%;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .pricing-card.featured .btn-primary {
-            background-color: var(--accent-yellow);
-            color: var(--bg-dark);
-            border-color: var(--accent-yellow);
-        }
-
-        .pricing-card.featured .btn-primary:hover {
-            background-color: #ffd838;
-        }
-
-        /* FAQ SECTION */
-        .faq-section {
-            padding: 5rem 4rem;
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1.6fr;
-            gap: 4rem;
-            align-items: start;
-        }
-
-        .faq-intro {
-            position: sticky;
-            top: 110px;
-        }
-
-        .faq-kicker {
-            display: block;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.85rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
-        .faq-intro h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-        }
-
-        .faq-intro p {
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .faq-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .faq-filter {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 0.5rem 1.1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            min-height: 40px;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .faq-filter:hover {
-            border-color: var(--text-main);
-            color: var(--text-main);
-        }
-
-        .faq-filter.active {
-            background: var(--bg-dark);
-            border-color: var(--bg-dark);
-            color: var(--accent-yellow);
-        }
-
-        .faq-list {
-            border-top: 1px solid var(--border-color);
-        }
-
-        .faq-item {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .faq-item[hidden] {
-            display: none;
-        }
-
-        .faq-item summary {
-            list-style: none;
-            cursor: pointer;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.4rem 0.25rem;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .faq-item summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .faq-tag {
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-gold);
-            border: 1px solid rgba(216, 159, 0, 0.4);
-            border-radius: 50px;
-            padding: 0.2rem 0.65rem;
-            min-width: 88px;
-            text-align: center;
-        }
-
-        .faq-question {
-            font-size: 1.15rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            transition: color 0.2s ease;
-        }
-
-        .faq-item summary:hover .faq-question {
-            color: var(--accent-gold);
-        }
-
-        .faq-icon {
-            font-family: 'Courier Prime', monospace;
-            font-size: 1.6rem;
-            line-height: 1;
-            color: var(--accent-gold);
-            transition: transform 0.3s ease;
-        }
-
-        .faq-item[open] .faq-icon {
-            transform: rotate(45deg);
-        }
-
-        .faq-answer {
-            padding: 0 0.25rem 1.6rem calc(88px + 1.25rem);
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-muted);
-            line-height: 1.7;
-            font-size: 0.98rem;
-        }
-
-        .faq-answer p + p,
-        .faq-answer p + ul,
-        .faq-answer ul + p {
-            margin-top: 0.8rem;
-        }
-
-        .faq-answer ul {
-            padding-left: 1.2rem;
-        }
-
-        .faq-answer li {
-            margin-bottom: 0.3rem;
-        }
-
-        .faq-answer strong {
-            color: var(--text-main);
-        }
-
-        .faq-cta {
-            margin-top: 2.5rem;
-            padding: 1.8rem 2rem;
-            background: var(--bg-dark);
-            color: var(--text-light);
-            border-radius: 8px;
-            border: 2px solid var(--accent-yellow);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-        }
-
-        .faq-cta p {
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-light-muted);
-            line-height: 1.5;
-        }
-
-        .faq-cta strong {
-            display: block;
-            color: var(--accent-yellow);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            margin-bottom: 0.25rem;
-        }
-
-        .faq-cta .btn-primary {
-            background-color: var(--accent-yellow);
-            color: var(--bg-dark);
-            border-color: var(--accent-yellow);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .faq-cta .btn-primary .btn-arrow {
-            color: var(--bg-dark);
-        }
-
-        /* FAQ – MÖRK BAKGRUND */
-        .faq-band {
-            width: 100%;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            border-top: 2px solid var(--accent-yellow);
-            border-bottom: 2px solid var(--accent-yellow);
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-            margin: 3rem 0;
-        }
-
-        .faq-band .faq-section {
-            padding: 6rem 4rem;
-        }
-
-        .faq-band .faq-kicker,
-        .faq-band .faq-icon,
-        .faq-band .faq-tag {
-            color: var(--accent-yellow);
-        }
-
-        .faq-band .faq-tag {
-            border-color: rgba(243, 198, 20, 0.4);
-        }
-
-        .faq-band .faq-intro h2 {
-            color: var(--accent-yellow);
-        }
-
-        .faq-band .faq-intro p,
-        .faq-band .faq-answer {
-            color: var(--text-light-muted);
-        }
-
-        .faq-band .faq-answer strong {
-            color: var(--text-light);
-        }
-
-        .faq-band .faq-filter {
-            border-color: rgba(244, 238, 228, 0.2);
-            color: var(--text-light-muted);
-        }
-
-        .faq-band .faq-filter:hover {
-            border-color: var(--text-light);
-            color: var(--text-light);
-        }
-
-        .faq-band .faq-filter.active {
-            background: var(--accent-yellow);
-            border-color: var(--accent-yellow);
-            color: var(--bg-dark);
-        }
-
-        .faq-band .faq-list,
-        .faq-band .faq-item {
-            border-color: rgba(244, 238, 228, 0.15);
-        }
-
-        .faq-band .faq-item summary {
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
-        }
-
-        .faq-band .faq-item summary:hover {
-            background-color: rgba(243, 198, 20, 0.06);
-        }
-
-        .faq-band .faq-item summary:hover .faq-question,
-        .faq-band .faq-item[open] .faq-question {
-            color: var(--accent-yellow);
-        }
-
-        .faq-band .faq-cta {
-            background: rgba(0, 0, 0, 0.25);
-            border: 2px dashed var(--accent-yellow);
-        }
-
-        /* CONTACT SECTION */
-        .contact-section {
-            padding: 5rem 4rem 7rem 4rem;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .contact-section h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            margin-bottom: 1rem;
-        }
-
-        .contact-section p {
-            font-family: 'Courier Prime', monospace;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: left;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-gold);
-        }
-
-        .form-control {
-            background: rgba(26, 24, 22, 0.03);
-            border: 1px solid var(--border-color);
-            padding: 0.9rem 1rem;
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            border-radius: 6px;
-            width: 100%;
-            -webkit-appearance: none;
-        }
-
-        .form-control:focus {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 0 3px rgba(216, 159, 0, 0.15);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        select.form-control {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23d89f00' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 2.5rem;
-        }
-
-        .form-status {
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.95rem;
-            text-align: center;
-            min-height: 1.4rem;
-            margin: 0 !important;
-        }
-
-        .form-status.success {
-            color: #2e8b57;
-        }
-
-        .form-status.error {
-            color: #c0392b;
-        }
-
-        .contact-form button:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
-
-        /* FOOTER */
-        footer {
-            background-color: var(--bg-dark);
-            border-top: 2px solid var(--accent-yellow);
-            padding: 4rem 4rem 2rem 4rem;
-            color: var(--text-light-muted);
-            font-family: 'Courier Prime', monospace;
-        }
-
-        .footer-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 3rem;
-            padding-bottom: 3rem;
-            border-bottom: 1px solid rgba(244, 238, 228, 0.15);
-        }
-
-        .footer-brand .footer-logo {
-            font-family: 'Courier Prime', monospace;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-light);
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-brand .footer-logo img {
-            max-width: 180px;
-            height: auto;
-            display: block;
-        }
-
-        .footer-brand p {
-            color: var(--text-light-muted);
-            font-size: 0.9rem;
-            max-width: 320px;
-            line-height: 1.5;
-        }
-
-        .footer-column h4 {
-            color: var(--accent-yellow);
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 1.2rem;
-        }
-
-        .footer-column ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .footer-column a {
-            color: var(--text-light-muted);
-            text-decoration: none;
-            font-size: 0.88rem;
-            transition: color 0.2s, padding-left 0.2s;
-            display: inline-block;
-            padding: 0.2rem 0;
-        }
-
-        .footer-column a:hover {
-            color: var(--accent-yellow);
-            padding-left: 4px;
-        }
-
-        .footer-bottom {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-
-        .footer-bottom .back-to-top {
-            color: var(--accent-yellow);
-            text-decoration: none;
-            transition: opacity 0.2s;
-            padding: 0.5rem 0;
-        }
-
-        .footer-bottom .back-to-top:hover {
-            text-decoration: underline;
-        }
-
-        /* =========================================================
-           RESPONSIVE BREAKPOINTS (MEDIA QUERIES)
-           ========================================================= */
-
-        /* Bärbara / Mindre skärmar & Tablets i liggande läge */
-        @media(max-width: 1100px) {
-            .hero-postcard {
-                display: none;
-            }
-
-            .full-width-section {
-                padding: 5rem 2.5rem;
-            }
-
-            .pricing-section {
-                padding: 4rem 2rem;
-            }
-
-            footer {
-                padding: 3.5rem 2.5rem 2rem 2.5rem;
-            }
-        }
-
-        /* Dölj FENRAC AB-animationen på surfplattor och mobilskärmar */
-        @media(max-width: 768px) {
-            .hero-animation-container {
-                display: none !important;
-            }
-        }
-
-        /* Tablets & Mobiler */
-        @media(max-width: 950px) {
-            header { 
-                padding: 1rem 1.5rem; 
-            }
-            
-            .mobile-menu-btn {
-                display: flex;
-            }
-
-            nav {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                max-width: 320px;
-                height: 100vh;
-                height: 100dvh;
-                background-color: var(--bg-color);
-                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
-                padding: 5.5rem 2rem 2rem 2rem;
-                transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.35s;
-                visibility: hidden;
-                overflow-y: auto;
-                z-index: 1001;
-                display: flex;
-                flex-direction: column;
-            }
-
-            nav.nav-open {
-                right: 0;
-                visibility: visible;
-                transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 1.5rem;
-                width: 100%;
-            }
-
-            nav a {
-                font-size: 1.15rem;
-                display: block;
-                padding: 0.6rem 0;
-            }
-
-            nav a::after {
-                display: none;
-            }
-
-            .hero {
-                padding: 3.5rem 1.25rem 2.5rem 1.25rem;
-                min-height: auto;
-            }
-
-            .full-width-section { 
-                padding: 4rem 1.5rem; 
-                margin: 2rem 0; 
-            }
-
-            .full-width-container { 
-                grid-template-columns: 1fr; 
-                gap: 2.5rem; 
-            }
-
-            .pricing-section { 
-                padding: 3.5rem 1.25rem; 
-            }
-
-            .pricing-grid { 
-                grid-template-columns: 1fr; 
-                gap: 1.5rem;
-            }
-
-            .footer-container { 
-                grid-template-columns: 1fr; 
-                gap: 2.5rem; 
-            }
-
-            .footer-bottom { 
-                flex-direction: column; 
-                gap: 1rem; 
-                align-items: flex-start; 
-            }
-
-            .track-desc { 
-                display: none; 
-            }
-
-            .track-item { 
-                grid-template-columns: 35px 1fr auto; 
-            }
-
-            .contact-section {
-                padding: 3.5rem 1.25rem 4.5rem 1.25rem;
-            }
-
-            .faq-section {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                padding: 3.5rem 1.25rem;
-            }
-
-            .faq-intro {
-                position: static;
-            }
-
-            .faq-band {
-                margin: 2rem 0;
-            }
-
-            .faq-band .faq-section {
-                padding: 4rem 1.25rem;
-            }
-
-            .faq-intro p {
-                margin-bottom: 1.5rem;
-            }
-
-            .faq-item summary {
-                grid-template-columns: 1fr auto;
-                gap: 0.5rem 1rem;
-            }
-
-            .faq-tag {
-                grid-column: 1 / -1;
-                justify-self: start;
-                min-width: 0;
-            }
-
-            .faq-answer {
-                padding: 0 0.25rem 1.4rem 0.25rem;
-            }
-
-            .faq-cta {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1.5rem 1.25rem;
-            }
-
-            .faq-cta .btn-primary {
-                width: 100%;
-            }
-
-            footer { 
-                padding: 3rem 1.25rem 1.5rem 1.25rem; 
-            }
-        }
-
-        /* Små Mobiler */
-        @media(max-width: 600px) {
-            header {
-                padding: 0.85rem 1.25rem;
-            }
-
-            .logo img {
-                max-width: 130px;
-            }
-
-            .hero-title {
-                font-size: 1.75rem;
-                letter-spacing: -0.5px;
-            }
-
-            .hero-subtitle {
-                font-size: 0.95rem;
-                margin-bottom: 2rem;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .hero-actions .btn-primary,
-            .hero-actions .btn-secondary {
-                width: 100%;
-            }
-
-            .projects-box {
-                padding: 1.5rem 1rem;
-            }
-
-            .pricing-card {
-                padding: 2.2rem 1.25rem;
-            }
-
-            .pricing-header {
-                margin-bottom: 2rem;
-            }
-
-            .contact-section p {
-                margin-bottom: 1.8rem;
-            }
-
-            .footer-brand .footer-logo img {
-                max-width: 150px;
-            }
-        }
-    </style>
-    <!-- EmailJS för kontaktformuläret -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wimo</title>
+  <script>try { if (localStorage.getItem("wimo-tema") === "mork") document.documentElement.setAttribute("data-tema", "mork"); } catch (e) { }</script>
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=1">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png?v=1">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=1">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#f8f6f0" id="p4Temafarg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Wimo">
+  <meta name="description" content="Wimo – digital fyraveckorstavla för produktionsplanering på byggarbetsplatser.">
+  <meta name="theme-color" content="#f8f6f0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap">
+
+  <link rel="stylesheet" href="css/bas.css?v=20261113g">
+  <link rel="stylesheet" href="css/dialoger.css?v=20261113g">
+  <link rel="stylesheet" href="css/vyer.css?v=20261113g">
+  <link rel="stylesheet" href="css/utskrift.css?v=20261113g">
+  <link rel="stylesheet" href="css/skal.css?v=20261113g">
+  <link rel="stylesheet" href="css/konto.css?v=20261113g">
+  <link rel="stylesheet" href="css/datumval.css?v=20261113g">
+  <link rel="stylesheet" href="css/gantt.css?v=20261113g">
+  <link rel="stylesheet" href="css/dagbok.css?v=20261113g">
+  <link rel="stylesheet" href="css/forslag.css?v=20261113g">
+  <link rel="stylesheet" href="css/tema.css?v=20261113g">
+  <link rel="stylesheet" href="css/backup.css?v=20261113g">
+  <link rel="stylesheet" href="css/hjalp.css?v=20261113g">
+  <link rel="stylesheet" href="css/hindernotis.css?v=20261113g">
+  <link rel="stylesheet" href="css/mobil.css?v=20261113g">
 </head>
-<body>
+<body class="p4-laddar">
+  <!-- Laddning medan inloggningen kontrolleras -->
+  <div class="p4-laddning" id="p4Laddning" role="status">
+    <img class="p4-ord p4-logotyp" src="img/wimo.png?v=1" alt="Wimo" width="660" height="160">
+    <span class="p4-snurr" aria-hidden="true"></span>
+    <p id="p4LaddningText">Startar Wimo…</p>
+  </div>
 
-    <header>
-        <a href="#" class="logo"><img src="logo.png" alt="Fenrac Logo"></a>
-        
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Öppna meny" aria-expanded="false" aria-controls="navMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <div class="menu-overlay" id="menuOverlay"></div>
-
-        <nav id="navMenu">
-            <ul>
-                <li><a href="#om-oss">Om oss</a></li>
-                <li><a href="#priser">Priser</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#kontakt">Kontakt</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-glow"></div>
-
-        <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-1" style="transition-delay: 0.1s;">
-            <img src="Images/jobbvio-logo.png" alt="Jobbvio">
-            <div class="postcard-caption">
-                <span class="postcard-title">Jobbvio</span>
-                <span class="postcard-tag">#01</span>
-            </div>
-        </a>
-
-        <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-2" style="transition-delay: 0.25s;">
-            <img src="Images/fornoleon-logo.png" alt="Fornoleon">
-            <div class="postcard-caption">
-                <span class="postcard-title">Fornoleon</span>
-                <span class="postcard-tag">#02</span>
-            </div>
-        </a>
-
-        <a href="https://neocarlsson.fenrac.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-3" style="transition-delay: 0.4s;">
-            <img src="Images/porfolio-logo.png" alt="VD Portfolio">
-            <div class="postcard-caption">
-                <span class="postcard-title">VD Portfolio</span>
-                <span class="postcard-tag">#03</span>
-            </div>
-        </a>
-        
-        <div class="hero-animation-container" id="heroAnimationBox">
-            <div class="morph-stage" id="morphStage"></div>
-        </div>
-
-        <h1 class="hero-title">Där idéer blir till <span class="highlight">verklighet.</span></h1>
-        <p class="hero-subtitle">Vi bygger skräddarsydda hemsidor, appar och digitala varumärkeskoncept som skiljer sig från mängden.</p>
-        
-        <div class="hero-actions">
-            <a href="#kontakt" class="btn-primary">Starta projekt <span class="btn-arrow">→</span></a>
-            <a href="#projekt" class="btn-secondary">Se våra arbeten</a>
-        </div>
-    </section>
-
-    <!-- ABOUT & PROJECTS SECTION -->
-    <section id="om-oss" class="full-width-section">
-        <div class="full-width-container">
-            <div class="about-content">
-                <h2>Vi gör det bättre.</h2>
-                <p>Fenrac AB är till för dig. Vi är noga med tydlig kommunikation, för att kunderna ska få den bästa möjliga produkt.</p>
-                <p><span style="color: #f3c614;">Inte samma AI-hemsida</span> som syns överallt, utan vi blandar in den mänskliga faktorn för en unik design. Trots det, nästan lika kort produktionstid som de icke-mänskliga tjänsterna.</p>
-                <p>Vi utvecklar också våra egna ideer, vilket hjälper dig som kund, att få en ännu tydligare inblick i våra projekt.</p>
-            </div>
-
-            <div id="projekt" class="projects-box">
-                <div class="projects-box-title">Våra Projekt //</div>
-                <div class="track-list">
-                    <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="track-item">
-                        <div class="track-num">01</div>
-                        <div class="track-name">Jobbvio</div>
-                        <div class="track-desc">jobbvio.se</div>
-                        <div class="arrow-indicator">←</div>
-                    </a>
-                    
-                    <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="track-item">
-                        <div class="track-num">02</div>
-                        <div class="track-name">Fornoleon</div>
-                        <div class="track-desc">fornoleon.se</div>
-                        <div class="arrow-indicator">←</div>
-                    </a>
-                    
-                    <a href="https://neocarlsson.fenrac.se" target="_blank" rel="noopener noreferrer" class="track-item">
-                        <div class="track-num">03</div>
-                        <div class="track-name">VD. Portfolio</div>
-                        <div class="track-desc">neocarlsson.fenrac.se</div>
-                        <div class="arrow-indicator">←</div>
-                    </a>
-                    
-                    <a href="https://foliohelper.fenrac.se" target="_blank" rel="noopener noreferrer" class="track-item">
-                        <div class="track-num">04</div>
-                        <div class="track-name">FolioHelper</div>
-                        <div class="track-desc">foliohelper.fenrac.se</div>
-                        <div class="arrow-indicator">←</div>
-                    </a>
-
-                    <a href="https://roottheme.fenrac.se" target="_blank" rel="noopener noreferrer" class="track-item">
-                        <div class="track-num">05</div>
-                        <div class="track-name">RootTheme</div>
-                        <div class="track-desc">roottheme.fenrac.se</div>
-                        <div class="arrow-indicator">←</div>
-                    </a>
-                    
-                    <a href="#kontakt" class="track-item highlight-track" style="border-bottom: none;">
-                        <div class="track-num" style="color: var(--text-light);">05</div>
-                        <div class="track-name">Ditt nästa projekt</div>
-                        <div class="track-desc">Din idé till verklighet</div>
-                        <div class="arrow-indicator">←</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PRICING SECTION -->
-    <section id="priser" class="pricing-section">
-        <div class="pricing-header">
-            <h2>Prisplaner</h2>
-            <p>Välj den modell som passar bäst för ditt nästa digitala projekt.</p>
-        </div>
-
-        <div class="pricing-grid">
-            <!-- Basic Plan -->
-            <div class="pricing-card">
-                <div>
-                    <h3>Basic</h3>
-                    <div class="pricing-price">Från 10 000 kr</div>
-                    <p class="pricing-desc">Vi bygger och formar hemsidan efter kundens förfrågan, men då endast fram tills lanseringen.</p>
-                </div>
-                <button type="button" class="btn-secondary select-plan-btn" data-plan="Basic">Välj Basic</button>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="pricing-card featured">
-                <div class="pricing-badge">Populärast</div>
-                <div>
-                    <h3>Pro</h3>
-                    <div class="pricing-price">3 000 kr / mån</div>
-                    <p class="pricing-desc" style="margin-bottom: 1rem;"><strong style="color: var(--text-light);">Startavgift:</strong> 10 000 kr</p>
-                    <p class="pricing-desc">Vi bygger och skräddarsyr hemsidan/appen tillsammans med kunden. Utvecklar projektet under en längre tid med tydlig kommunikation och kontinuerligt underhåll även efter lansering.</p>
-                </div>
-                <button type="button" class="btn-primary select-plan-btn" data-plan="Mile">Välj Pro <span class="btn-arrow">→</span></button>
-            </div>
-
-            <!-- Custom Plan -->
-            <div class="pricing-card">
-                <div>
-                    <h3>Custom</h3>
-                    <div class="pricing-price">Varierande</div>
-                    <p class="pricing-desc">Denna plan kan variera både projektmässigt och prismässigt. Används för projekt som inte stämmer in på någon av de andra planer.</p>
-                </div>
-                <button type="button" class="btn-secondary select-plan-btn" data-plan="Custom">Kontakta oss</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ SECTION -->
-    <!-- Svar markerade med "KONTROLLERA" bygger på antaganden – stäm av mot era villkor. -->
-    <section id="faq" class="faq-band">
-    <div class="faq-section">
-        <div class="faq-intro">
-            <span class="faq-kicker">Vanliga frågor //</span>
-            <h2>Vilken plan passar dig?</h2>
-            <p>Här går vi djupare in på vad som ingår i Basic, Pro och Custom, så att du vet exakt vad du får innan du hör av dig.</p>
-
-            <div class="faq-filters" role="group" aria-label="Filtrera frågor">
-                <button type="button" class="faq-filter active" data-filter="alla">Alla</button>
-                <button type="button" class="faq-filter" data-filter="basic">Basic</button>
-                <button type="button" class="faq-filter" data-filter="pro">Pro</button>
-                <button type="button" class="faq-filter" data-filter="custom">Custom</button>
-                <button type="button" class="faq-filter" data-filter="allmant">Allmänt</button>
-            </div>
-        </div>
-
-        <div>
-            <div class="faq-list">
-
-                <!-- BASIC -->
-                <details class="faq-item" data-plan="basic">
-                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Vad ingår i Basic?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Med Basic designar och bygger vi din hemsida utifrån dina önskemål, hela vägen fram till lansering. Du berättar vad du behöver, vi tar fram ett förslag och formar sidan tills du är nöjd.</p>
-                        <!-- KONTROLLERA: lista vad som faktiskt ingår -->
-                        <ul>
-                            <li>Unik design – ingen färdig mall</li>
-                            <li>Anpassad för mobil, surfplatta och dator</li>
-                            <li>Hjälp med publicering vid lansering</li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="basic">
-                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Varför står det "från" 10 000 kr?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>10 000 kr är startpriset för en mindre hemsida. Det slutliga priset beror på hur stort projektet är, till exempel hur många sidor och vilka funktioner du behöver.</p>
-                        <!-- KONTROLLERA: att ni ger fast pris innan start -->
-                        <p>Efter vårt första samtal får du ett tydligt pris innan vi börjar, så att det inte blir några överraskningar.</p>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="basic">
-                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Vad händer efter lanseringen?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Basic gäller fram till lanseringen. Efter det ingår inget löpande underhåll eller vidareutveckling.</p>
-                        <!-- KONTROLLERA: hur ni hanterar ändringar efter lansering -->
-                        <p>Vill du göra ändringar senare kan du kontakta oss för en offert, eller gå över till <strong>Pro</strong> om du vill att vi tar hand om sidan löpande.</p>
-                    </div>
-                </details>
-
-                <!-- PRO -->
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad är skillnaden mellan Basic och Pro?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Med Basic bygger vi sidan och lämnar över den vid lansering. Med <strong>Pro</strong> blir vi din digitala partner över tid:</p>
-                        <ul>
-                            <li>Vi skräddarsyr hemsidan eller appen <strong>tillsammans</strong> med dig</li>
-                            <li>Projektet utvecklas under en längre period i stället för att vara klart vid ett datum</li>
-                            <li>Kontinuerligt underhåll och tydlig kommunikation även efter lansering</li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad täcker startavgiften på 10 000 kr?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <!-- KONTROLLERA: vad startavgiften täcker och när månadsavgiften börjar -->
-                        <p>Startavgiften täcker arbetet med att ta fram och bygga den första versionen av din hemsida eller app. Den betalas en gång, i början av samarbetet.</p>
-                        <p>Månadsavgiften på 3 000 kr gäller sedan för det löpande arbetet.</p>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad får jag för 3 000 kr i månaden?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <!-- KONTROLLERA: exakt vad som ingår i månadsavgiften -->
-                        <p>Månadsavgiften täcker det löpande arbetet med din sida, till exempel:</p>
-                        <ul>
-                            <li>Underhåll så att sidan fungerar som den ska</li>
-                            <li>Ändringar och uppdateringar av innehåll</li>
-                            <li>Fortsatt utveckling av nya delar och funktioner</li>
-                            <li>En kontaktperson som känner ditt projekt</li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Finns det någon bindningstid?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <!-- KONTROLLERA: skriv era faktiska villkor om bindningstid och uppsägning -->
-                        <p>Bindningstid och uppsägningstid går vi igenom tillsammans och skriver in i avtalet innan vi startar, så att du vet exakt vad som gäller.</p>
-                    </div>
-                </details>
-
-                <!-- CUSTOM -->
-                <details class="faq-item" data-plan="custom">
-                    <summary><span class="faq-tag">Custom</span><span class="faq-question">När passar Custom?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Custom är till för projekt som inte passar in i Basic eller Pro. Det kan till exempel vara:</p>
-                        <ul>
-                            <li>En app eller ett större system</li>
-                            <li>Ett helt varumärkeskoncept, inte bara en hemsida</li>
-                            <li>Ett projekt med speciella krav på funktioner eller tidsplan</li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="custom">
-                    <summary><span class="faq-tag">Custom</span><span class="faq-question">Hur sätts priset för Custom?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Priset varierar eftersom varje Custom-projekt ser olika ut. Vi börjar med ett samtal om vad du vill uppnå, och sedan får du ett förslag med upplägg och pris som är anpassat efter just ditt projekt.</p>
-                    </div>
-                </details>
-
-                <!-- ALLMÄNT -->
-                <details class="faq-item" data-plan="allmant">
-                    <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Hur lång tid tar det att bygga en hemsida?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Det beror på hur stort projektet är. Vi lägger till den mänskliga faktorn för en unik design, men har ändå nästan lika kort produktionstid som AI-tjänsterna. Du får en tidsplan när vi har gått igenom ditt projekt.</p>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="allmant">
-                    <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Kan jag byta plan senare?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <!-- KONTROLLERA: att det går att byta plan -->
-                        <p>Ja. Har du börjat med Basic och vill ha löpande hjälp efter lanseringen kan du gå över till Pro. Hör av dig så hittar vi ett upplägg som passar.</p>
-                    </div>
-                </details>
-
-                <details class="faq-item" data-plan="allmant">
-                    <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Hur kommer vi igång?</span><span class="faq-icon">+</span></summary>
-                    <div class="faq-answer">
-                        <p>Välj den plan som låter mest rätt och fyll i kontaktformuläret längre ner. Berätta kort om din idé, så återkommer vi för att boka ett första samtal. Är du osäker på vilken plan som passar hjälper vi dig att välja.</p>
-                    </div>
-                </details>
-            </div>
-
-            <div class="faq-cta">
-                <p><strong>Hittade du inte svaret?</strong>Mejla oss på info@fenrac.se så svarar vi personligen.</p>
-                <a href="mailto:info@fenrac.se?subject=Fr%C3%A5ga%20om%20prisplaner" class="btn-primary">Ställ en fråga <span class="btn-arrow">→</span></a>
-            </div>
-        </div>
+  <!-- Väntar på godkännande: inloggad men inte godkänd av en admin -->
+  <div class="p4-vantesida" id="p4Vantar" role="status">
+    <div class="p4-vantar-kort">
+      <img class="p4-ord p4-logotyp" src="img/wimo.png?v=1" alt="Wimo" width="660" height="160">
+      <span class="p4-vantar-ikon" aria-hidden="true"></span>
+      <h1 id="p4VantarRubrik">Ditt konto väntar på godkännande</h1>
+      <p id="p4VantarText"></p>
+      <form class="p4-vantar-kod" id="p4VantarKodForm" novalidate>
+        <label for="p4VantarKod">Har du fått en projektkod?</label>
+        <div class="p4-vantar-kodrad"><input class="f p4-kodfalt" id="p4VantarKod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="T.ex. K7M4QX"><button type="submit" class="mknapp primar">Skicka ansökan</button></div>
+        <div class="notis dold" id="p4VantarKodSvar" role="status"></div>
+      </form>
+      <button type="button" class="mknapp primar p4-vantar-skapa dold" id="p4VantarSkapa">+ Skapa ett projekt</button>
+      <button type="button" class="mknapp" id="p4VantarLoggaUt">Logga ut</button>
     </div>
+  </div>
+
+  <!-- Inloggning: visas för den som inte är inloggad -->
+  <div class="p4-inloggning" id="p4Inloggning">
+    <section class="p4-in-intro">
+      <img class="p4-ord p4-logotyp" src="img/wimo-vit.png?v=1" alt="Wimo" width="660" height="160">
+      <h1>Fyra veckor framåt.<br>Ett kort per arbetsmoment.</h1>
+      <p>Den digitala fyraveckorstavlan för produktionsplanering — från tidplanen till vad laget gör på onsdag morgon.</p>
+      <ul>
+        <li>Planera moment med material, avrop och förutsättningar</li>
+        <li>Följ upp hinder, bemanning och veckans utfall</li>
+        <li>Projekten sparas i molnet och du når dem från alla dina datorer</li>
+      </ul>
     </section>
-
-    <!-- CONTACT SECTION -->
-    <section id="kontakt" class="contact-section">
-        <h2>Hör av dig</h2>
-        <p>Har du ett projekt i åtanke eller vill du förbättra något nuvarande? Skriv!</p>
-        
-        <form class="contact-form" id="contactForm">
-            <div class="form-group">
-                <label for="plan-select">Välj Prisplan *</label>
-                <select id="plan-select" class="form-control" required>
-                    <option value="" disabled selected>-- Välj en prisplan --</option>
-                    <option value="Basic">Basic (Från 10 000 kr)</option>
-                    <option value="Mile">Pro (3 000 kr / mån + startavgift)</option>
-                    <option value="Custom">Custom (Varierande)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="name">Ditt Namn</label>
-                <input type="text" id="name" class="form-control" placeholder="Namn" required>
-            </div>
-            <div class="form-group">
-                <label for="email">E-postadress</label>
-                <input type="email" id="email" class="form-control" placeholder="namn@foretag.se" required>
-            </div>
-            <div class="form-group">
-                <label for="message">Meddelande</label>
-                <textarea id="message" class="form-control" placeholder="Berätta om din idé..." required></textarea>
-            </div>
-            <button type="submit" class="btn-primary" id="contactSubmit" style="margin-top: 0.5rem; width: 100%; justify-content: center;">Skicka meddelande</button>
-            <p class="form-status" id="contactStatus" role="status" aria-live="polite"></p>
-        </form>
+    <section class="p4-in-kort" aria-labelledby="kkRubrik">
+      <div class="p4-konto-flikar" role="tablist">
+        <button type="button" data-k="logga" role="tab">Logga in</button>
+        <button type="button" data-k="skapa" role="tab">Skapa konto</button>
+      </div>
+      <h2 id="kkRubrik">Välkommen tillbaka</h2>
+      <p class="hjalp" id="kkHjalp"></p>
+      <form id="kkFormular" novalidate>
+        <div class="falt dold" id="kkNamnFalt"><label for="kkNamn">Namn</label><input class="f" id="kkNamn" autocomplete="name" placeholder="Förnamn Efternamn"></div>
+        <div class="falt"><label for="kkEpost">E-post</label><input class="f" id="kkEpost" type="email" autocomplete="email" required></div>
+        <div class="falt"><label for="kkLosen">Lösenord</label><input class="f" id="kkLosen" type="password" autocomplete="current-password" required></div>
+        <div class="falt dold" id="kkLosen2Falt"><label for="kkLosen2">Upprepa lösenordet</label><input class="f" id="kkLosen2" type="password" autocomplete="new-password"></div>
+        <div class="falt dold" id="kkKodFalt"><label for="kkKod">Projektkod <span class="p4-valfri">(om du har fått en)</span></label><input class="f p4-kodfalt" id="kkKod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="T.ex. K7M4QX"><small class="hjalp">Koden får du av projektadmin. Då är det projektadmin som godkänner dig. Utan kod godkänns kontot av huvudadmin.</small></div>
+        <div class="notis rod dold" id="kkFel" role="alert"></div>
+        <button type="submit" class="p4-btn p4-btn-primar p4-in-skicka" id="kkSkicka">Logga in</button>
+      </form>
+      <button type="button" class="p4-konto-lank" id="kkGlomt">Glömt lösenordet?</button>
     </section>
+  </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-brand">
-                <a href="#" class="footer-logo"><img src="logo-white.png" alt="Fenrac Logo White"></a>
-                <p>Vi bygger digitala hemsidor, appar och koncept som sticker ut från mängden.</p>
-            </div>
-            
-            <div class="footer-column">
-                <h4>Navigering</h4>
-                <ul>
-                    <li><a href="#om-oss">Om Oss</a></li>
-                    <li><a href="#projekt">Våra Projekt</a></li>
-                    <li><a href="#priser">Priser</a></li>
-                    <li><a href="#faq">Vanliga frågor</a></li>
-                    <li><a href="#kontakt">Kontakt</a></li>
-                </ul>
-            </div>
+  <a class="p4-hoppa" href="#rutnat">Hoppa till tavlan</a>
 
-            <div class="footer-column">
-                <h4>Kontakt & Info</h4>
-                <ul>
-                    <li><a href="#kontakt">Starta ett projekt</a></li>
-                    <li><a href="mailto:info@fenrac.se">info@fenrac.se</a></li>
-                    <li><span style="color: var(--accent-yellow);">Est. 2026 // Sweden</span></li>
-                </ul>
+  <header class="p4-header">
+    <div class="p4-header-inre">
+      <button class="p4-meny" id="p4Meny" type="button" aria-label="Öppna menyn" aria-expanded="false"><span></span><span></span><span></span></button>
+      <a class="p4-brand" href="#" id="p4Brand" title="Till tavlan">
+        <img class="p4-ord p4-logotyp" src="img/wimo.png?v=1" alt="Wimo" width="660" height="160">
+        <img id="logga" class="logga dold" alt="">
+      </a>
+      <button class="projektknapp" id="projektknapp" title="Byt eller hantera projekt"><span class="p4-pre">Projekt</span><span id="projektnamnText">Projekt</span><span class="p4-hindermark dold" id="projektHinder" role="img" aria-label="Öppna hinder">⚠</span><span class="p4-caret" aria-hidden="true"></span></button>
+      <nav class="flikar" id="flikar" aria-label="Tavlor"></nav>
+      <div class="p4-header-hoger">
+        <span class="status" id="status" role="status" aria-live="polite"></span>
+        <button class="p4-tema" id="p4Tema" type="button" title="Byt till mörkt läge" aria-label="Byt till mörkt läge" aria-pressed="false">
+          <svg class="ik-mane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="ik-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>
+        </button>
+        <label class="p4-sok" title="Sök bland posterna på tavlan ( / )">
+          <span class="p4-ik ik-sok" aria-hidden="true"></span>
+          <input id="p4Sok" type="search" placeholder="Sök på tavlan" autocomplete="off" aria-label="Sök på tavlan">
+          <kbd>/</kbd>
+        </label>
+        <button class="p4-konto" id="p4Konto" type="button"><span class="p4-konto-avatar" aria-hidden="true"></span><span class="p4-konto-text">Logga in</span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="p4-molnbanner dold" id="p4MolnBanner" role="status">
+    <span id="p4MolnBannerText"></span>
+    <button type="button" id="p4MolnBannerKnapp">Visa</button>
+  </div>
+
+  <div class="p4-skal">
+    <nav class="p4-sidebar" id="p4Sidebar" aria-label="Huvudmeny">
+      <div class="p4-navgrupp">
+        <div class="p4-navrubrik">Översikt</div>
+        <button class="p4-nav aktiv" type="button" data-nav="tavla"><span class="p4-ik ik-tavla"></span><span>Tavlan</span></button>
+        <button class="p4-nav" type="button" data-nav="dash"><span class="p4-ik ik-dash"></span><span>Projektöversikt</span><span class="p4-badge dold" id="p4AtgBadge" title="Kräver åtgärd"></span></button>
+        <button class="p4-nav" type="button" data-nav="start"><span class="p4-ik ik-lista"></span><span>Att göra</span><span class="p4-badge p4-badge-ljus dold" id="p4AgBadge" title="Öppna punkter"></span></button>
+        <button class="p4-nav" type="button" data-nav="backup"><span class="p4-ik ik-backup"></span><span>Back up</span><span class="p4-badge p4-badge-ljus dold" id="p4BuBadge" title="Back-up jobb som är redo"></span></button>
+        <button class="p4-nav" type="button" data-nav="gantt"><span class="p4-ik ik-gantt"></span><span>Gantt-schema</span></button>
+        <button class="p4-nav" type="button" data-nav="dagbok"><span class="p4-ik ik-dagbok"></span><span>Dagbok</span></button>
+      </div>
+      <div class="p4-navgrupp">
+        <div class="p4-navrubrik">Uppföljning</div>
+        <button class="p4-nav" id="utfallKnapp" type="button"><span class="p4-ik ik-utfall"></span><span>Veckans utfall</span></button>
+        <button class="p4-nav" id="resursKnapp" type="button"><span class="p4-ik ik-folk"></span><span>Resurser</span></button>
+        <button class="p4-nav" id="avropKnapp" type="button"><span class="p4-ik ik-last"></span><span>Avropslista</span></button>
+      </div>
+      <div class="p4-navgrupp">
+        <div class="p4-navrubrik">Data</div>
+        <button class="p4-nav" type="button" data-klick="visning"><span class="p4-ik ik-tv"></span><span>Visningsläge</span></button>
+        <button class="p4-nav" id="skrivUt" type="button"><span class="p4-ik ik-skriv"></span><span>Skriv ut</span></button>
+        <button class="p4-nav" type="button" data-nav="konto"><span class="p4-ik ik-konto"></span><span>Mitt konto</span><span class="p4-badge dold" id="p4KontoBadge"></span></button>
+      </div>
+      <div class="p4-navgrupp">
+        <div class="p4-navrubrik">Stöd</div>
+        <button class="p4-nav" type="button" data-nav="hjalp"><span class="p4-ik ik-hjalp"></span><span>Hjälp</span></button>
+        <button class="p4-nav" type="button" data-nav="forslag"><span class="p4-ik ik-forslag"></span><span>Förslag</span></button>
+        <button class="p4-nav dold" type="button" id="p4Installera"><span class="p4-ik ik-installera"></span><span>Installera appen</span></button>
+      </div>
+
+      <div class="p4-backup" id="p4Backup">
+        <div class="p4-backup-rad"><span class="p4-prick" id="p4BackupPrick"></span><b>Molnsynk</b></div>
+        <p id="p4BackupText">Ansluter till molnet…</p>
+      </div>
+
+      <button class="p4-nav p4-nav-liten" type="button" id="p4Genvagar"><span class="p4-ik ik-tangent"></span><span>Kortkommandon</span><kbd>?</kbd></button>
+    </nav>
+    <div class="p4-skugga" id="p4Skugga"></div>
+
+    <main class="p4-main" id="p4Main">
+      <section class="p4-tavlasida" aria-label="Fyraveckorstavlan">
+        <div class="p4-hero">
+          <div class="p4-hero-text">
+            <input class="tavlanamn" id="tavlanamn" aria-label="Tavlans namn" title="Klicka för att byta namn på tavlan">
+            <div class="p4-hero-meta">
+              <span class="spann" id="spann"></span>
+              <span class="p4-laschip" title="Du kan se allt i projektet men inte ändra något. Be en admin om du behöver redigera.">Bara läsbehörighet</span>
+              <span class="vychip dold" id="vychip">Du tittar utanför planen <button id="tillPlanen">Till planen</button></span>
+              <button class="kedjechip dold" id="kedjechip" title="Dölj den markerade kedjan">Kedja visas · Dölj ×</button>
             </div>
+          </div>
+          <div class="p4-hero-knappar">
+            <button class="navknapp dold" id="skarmLank" title="Länk som visar tavlan på en skärm, till exempel i Yodeck">Länk till skärm</button>
+            <button class="navknapp" id="visning" title="Avsluta visningsläget ( V )">Avsluta visning</button>
+          </div>
         </div>
 
-        <div class="footer-bottom">
-            <div>© 2026 Fenrac AB. Alla rättigheter förbehållna.</div>
-            <a href="#" class="back-to-top">↑ Till toppen</a>
+        <div class="p4-verktyg">
+          <div class="p4-grupp" role="group" aria-label="Bläddra">
+            <button class="navknapp" id="bakat" title="Bläddra en vecka bakåt — planen påverkas inte ( ← )">←<span class="p4-txt"> Föregående</span></button>
+            <button class="navknapp" id="idagKnapp" title="Bläddra till innevarande vecka ( T )">Denna vecka</button>
+            <button class="navknapp" id="framat" title="Bläddra en vecka framåt — planen påverkas inte ( → )"><span class="p4-txt">Nästa </span>→</button>
+          </div>
+          <span class="veckoval" id="veckoval">
+            <button type="button" data-v="1">1 vecka</button><button type="button" data-v="2">2 veckor</button><button type="button" data-v="4">4 veckor</button>
+          </span>
+          <div class="p4-verktyg-hoger">
+            <button class="navknapp" id="pagaendeKnapp" title="Visa flerdagarsmoment på dagarna mellan start och klart (gäller denna tavla)">Pågående</button>
+            <button class="navknapp" id="nyTavlaKnapp" title="Skapa en ny tavla i projektet, t.ex. för ett annat delområde">+ Ny tavla</button>
+          </div>
         </div>
-    </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mobile Menu Drawer & Overlay Logic
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const navMenu = document.getElementById('navMenu');
-            const menuOverlay = document.getElementById('menuOverlay');
+        <div class="p4-filter" role="group" aria-label="Visa posttyper">
+          <span class="p4-filter-rubrik">Visa</span>
+          <label class="p4-chip c-mote"><input type="checkbox" id="v-mote" checked><span class="p4-chipprick"></span>Möte</label>
+          <label class="p4-chip c-produktion"><input type="checkbox" id="v-produktion" checked><span class="p4-chipprick"></span>Produktion</label>
+          <label class="p4-chip c-avrop"><input type="checkbox" id="v-avrop" checked><span class="p4-chipprick"></span>Avrop</label>
+          <label class="p4-chip c-leverans"><input type="checkbox" id="v-leverans" checked><span class="p4-chipprick"></span>Leverans / viktigt</label>
+          <label class="p4-chip c-ue"><input type="checkbox" id="v-ue" checked><span class="p4-chipprick"></span>UE</label>
+          <label class="p4-chip c-franvaro"><input type="checkbox" id="v-franvaro" checked><span class="p4-chipprick"></span>Frånvaro</label>
+          <label class="p4-chip c-ovrigt"><input type="checkbox" id="v-ovrigt" checked><span class="p4-chipprick"></span>Övrigt</label>
+          <span class="p4-sokinfo dold" id="p4SokInfo"></span>
+        </div>
 
-            function toggleMenu(open) {
-                const isOpen = open !== undefined ? open : !navMenu.classList.contains('nav-open');
-                
-                if (isOpen) {
-                    mobileMenuBtn.classList.add('active');
-                    navMenu.classList.add('nav-open');
-                    menuOverlay.classList.add('active');
-                    document.body.classList.add('menu-open');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                    mobileMenuBtn.setAttribute('aria-label', 'Stäng meny');
-                } else {
-                    mobileMenuBtn.classList.remove('active');
-                    navMenu.classList.remove('nav-open');
-                    menuOverlay.classList.remove('active');
-                    document.body.classList.remove('menu-open');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                    mobileMenuBtn.setAttribute('aria-label', 'Öppna meny');
-                }
-            }
+        <div class="varningsremsa" id="varningsremsa"></div>
+        <div class="tavla"><div class="rutnat" id="rutnat"></div></div>
+        <div class="tomtavla dold" id="tomtavla">
+          <b>Tavlan är tom — dags att lägga upp planen.</b>
+          <span>Börja med denna vecka och nästa från huvudtidplanen. Bryt ner till delar, och backa avrop efter ledtiden.</span>
+          <div class="p4-tom-knappar">
+            <button type="button" class="p4-btn p4-btn-primar" id="planeraKnapp" title="Femstegsguide för ett produktionsmoment ( P )">Planera första momentet</button>
+            <button type="button" class="p4-btn p4-btn-ljus" id="snabbPostKnapp" title="Ny post ( N )">+ Snabb post</button>
+          </div>
+        </div>
+        <p class="p4-tips">Klicka på en post för att öppna den · dra för att flytta · dubbelklicka för att redigera · <b>+ Post</b> i varje dag</p>
+      </section>
 
-            if (mobileMenuBtn && navMenu) {
-                mobileMenuBtn.addEventListener('click', () => toggleMenu());
-                
-                if (menuOverlay) {
-                    menuOverlay.addEventListener('click', () => toggleMenu(false));
-                }
+      <aside class="p4-aside" aria-label="Sidopaneler">
+        <div class="panel" id="varningspanel">
+          <h2><span class="p4-ik ik-vader"></span>Vädervarningar<button type="button" class="p4-fallknapp" id="vaderFall" aria-expanded="false" aria-controls="varningsinnehall" title="Visa vädret"><span class="p4-caret" aria-hidden="true"></span></button></h2>
+          <div id="varningsinnehall"></div>
+        </div>
 
-                navMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => toggleMenu(false));
-                });
+        <div class="panel p4-hinderpanel">
+          <h2><span class="p4-ik ik-hinder"></span>Hinderlista <span class="antal" id="hinderAntal"></span></h2>
+          <div class="hindertopp" id="hindertopp"></div>
+          <div class="varn dold" id="hinderVarn">Fler än tio rader — då ligger ni efter. Det är i sig informationen.</div>
+          <ul class="hinder" id="hinderlista"></ul>
+          <div class="hinderform">
+            <input class="f" id="hVad" placeholder="Vad är hindret?">
+            <div class="rad2">
+              <input class="f" id="hVem" placeholder="Vem (namn)">
+              <input class="f" id="hNar" type="date" title="Senast när det ska vara löst">
+              <button class="mknapp primar" id="hLagg">Lägg till</button>
+            </div>
+          </div>
+        </div>
 
-                // Stäng med Escape
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && navMenu.classList.contains('nav-open')) {
-                        toggleMenu(false);
-                        mobileMenuBtn.focus();
-                    }
-                });
+        <div class="panel" id="historikpanel">
+          <h2><span class="p4-ik ik-historik"></span>Historik <span class="antal" id="histAntal"></span></h2>
+          <ul class="hist" id="historik"></ul>
+          <div class="ordlista" id="ordlista"></div>
+        </div>
 
-                // Stäng om fönstret blir bredare än mobilbrytpunkten (t.ex. vid rotering)
-                window.matchMedia('(min-width: 951px)').addEventListener('change', (e) => {
-                    if (e.matches) toggleMenu(false);
-                });
-            }
+      </aside>
 
-            // Skrivmaskinsanimation för FENRAC AB vid sidinladdning
-            const stage = document.getElementById('morphStage');
-            const targetText = "FENRAC AB";
+      <section class="p4-kontosida" id="p4KontoSida" aria-label="Mitt konto"></section>
+      <div id="dash" class="dold"></div>
+      <div id="pstart" class="dold"></div>
+      <div id="gantt" class="dold" aria-label="Gantt-schema"></div>
+      <div id="dagbok" class="dold" aria-label="Dagbok"></div>
+      <div id="backup" class="dold" aria-label="Back up"></div>
+      <div id="hjalp" class="dold" aria-label="Hjälp"></div>
+      <div id="forslag" class="dold" aria-label="Förslag"></div>
+    </main>
+  </div>
 
-            function runTypewriterAnimation() {
-                stage.innerHTML = '';
+  <footer class="p4-footer">
+    <div class="p4-footer-inre">
+      <div class="p4-footer-kol p4-footer-brand">
+        <div class="p4-brand p4-brand-mork"><img class="p4-ord p4-logotyp" src="img/wimo-vit.png?v=1" alt="Wimo" width="660" height="160"></div>
+        <p>Digital fyraveckorstavla för produktionsplanering. Fyra veckor framåt, ett kort per arbetsmoment — från tidplanen till vad laget gör på onsdag morgon.</p>
+      </div>
+      <div class="p4-footer-kol">
+        <h4>Kortkommandon</h4>
+        <ul class="p4-genvagslista">
+          <li><kbd>N</kbd> Snabb post</li><li><kbd>P</kbd> Planera moment</li>
+          <li><kbd>←</kbd><kbd>→</kbd> Bläddra veckor</li><li><kbd>T</kbd> Denna vecka</li>
+          <li><kbd>/</kbd> Sök</li><li><kbd>H</kbd> Hjälp</li><li><kbd>Esc</kbd> Stäng</li>
+        </ul>
+      </div>
+      <div class="p4-footer-kol">
+        <h4>Din data</h4>
+        <p>Projekten sparas automatiskt i molnet, med en kopia i webbläsaren så att Wimo fungerar även utan nät. Bara projektets medlemmar och admin kommer åt ett projekt.</p>
+        <p class="p4-footer-lagring" id="p4Lagring"></p>
+      </div>
+    </div>
+    <div class="p4-footer-botten"><span>Wimo · v<span id="p4Version"></span></span><span>Sparas i molnet · synkas mellan datorer · fungerar offline</span></div>
+  </footer>
 
-                const cursor = document.createElement('span');
-                cursor.className = 'typewriter-cursor';
-                stage.appendChild(cursor);
+  <div class="angrarad dold" id="angrarad">
+    <span id="angraText"></span><button type="button" id="angraKnapp">Ångra</button>
+  </div>
 
-                let index = 0;
-                const typingSpeed = 110; // Hastighet i ms per tecken
+  <div id="utskrift"></div>
+  <div id="utskriftsfot"></div>
 
-                function typeNextChar() {
-                    if (index < targetText.length) {
-                        const char = targetText[index];
-                        const span = document.createElement('span');
+  <!-- Domänlogik (core) -->
+  <script src="js/core/konstanter.js?v=20261113g"></script>
+  <script src="js/core/datum.js?v=20261113g"></script>
+  <script src="js/core/kort.js?v=20261113g"></script>
+  <script src="js/core/operationer.js?v=20261113g"></script>
+  <script src="js/core/avrop.js?v=20261113g"></script>
+  <script src="js/core/resurser.js?v=20261113g"></script>
+  <script src="js/core/franvaro.js?v=20261113g"></script>
+  <script src="js/core/foretag.js?v=20261113g"></script>
+  <script src="js/core/projekt.js?v=20261113g"></script>
 
-                        const isAccent = index >= 7; // "AB" får guld-accent
-                        span.className = 'letter-char' + (isAccent ? ' accent' : '');
-                        span.textContent = char === ' ' ? '\u00A0' : char;
+  <!-- Gränssnitt, lagring och dialoger -->
+  <script src="js/app/grund.js?v=20261113g"></script>
+  <script src="js/app/tavla.js?v=20261113g"></script>
+  <script src="js/app/flytt.js?v=20261113g"></script>
+  <script src="js/app/guide.js?v=20261113g"></script>
+  <script src="js/app/redigera.js?v=20261113g"></script>
+  <script src="js/app/utfall-vader.js?v=20261113g"></script>
+  <script src="js/app/utskrift.js?v=20261113g"></script>
+  <script src="js/app/register.js?v=20261113g"></script>
+  <script src="js/app/oversikt.js?v=20261113g"></script>
+  <script src="js/app/projekt.js?v=20261113g"></script>
+  <script src="js/app/gantt.js?v=20261113g"></script>
+  <script src="js/app/gantt-dra.js?v=20261113g"></script>
+  <script src="js/app/backup.js?v=20261113g"></script>
+  <script src="js/app/hjalp.js?v=20261113g"></script>
+  <script src="js/app/dagbok.js?v=20261113g"></script>
+  <script src="js/app/forslag.js?v=20261113g"></script>
+  <script src="js/app/hindernotis.js?v=20261113g"></script>
 
-                        stage.insertBefore(span, cursor);
-                        index++;
-                        setTimeout(typeNextChar, typingSpeed);
-                    } else {
-                        // Animationen är klar: vänta 2 sekunder och tona sedan bort markören
-                        setTimeout(() => {
-                            cursor.style.opacity = '0';
-                            setTimeout(() => {
-                                cursor.remove();
-                            }, 400); // Tar bort elementet helt efter övergången
-                        }, 2000);
-                    }
-                }
+  <!-- Det nya skalet: navigering, sök, kortkommandon och säkerhetskopia -->
+  <script src="js/skal.js?v=20261113g"></script>
 
-                setTimeout(typeNextChar, 300); // Liten fördröjning innan skrivandet startar
-            }
+  <!-- Egen datumväljare för alla datumfält -->
+  <script src="js/app/datumval.js?v=20261113g"></script>
 
-            runTypewriterAnimation();
-
-            setTimeout(() => {
-                const postcards = document.querySelectorAll('.hero-postcard');
-                postcards.forEach(card => {
-                    card.classList.add('loaded');
-                });
-            }, 200);
-
-            // Mjuk rullning (Smooth Scroll)
-            function smoothScrollTo(targetY, duration = 800) {
-                const startY = window.pageYOffset;
-                const distance = targetY - startY;
-                let startTime = null;
-
-                function animation(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    const timeElapsed = currentTime - startTime;
-                    
-                    let progress = timeElapsed / duration;
-                    if (progress > 1) progress = 1;
-                    const ease = progress < 0.5 
-                        ? 4 * progress * progress * progress 
-                        : (progress - 1) * (2 * progress - 2) * (2 * progress - 2) + 1;
-
-                    window.scrollTo(0, startY + distance * ease);
-
-                    if (timeElapsed < duration) {
-                        requestAnimationFrame(animation);
-                    }
-                }
-
-                requestAnimationFrame(animation);
-            }
-
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    
-                    if (targetId === '#') {
-                        smoothScrollTo(0, 800);
-                        return;
-                    }
-
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                        smoothScrollTo(targetPosition - 20, 850);
-                    }
-                });
-            });
-
-            // Välj prisplan i formuläret
-            const planButtons = document.querySelectorAll('.select-plan-btn');
-            const planSelect = document.getElementById('plan-select');
-
-            planButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const planName = button.getAttribute('data-plan');
-                    if (planSelect && planName) {
-                        planSelect.value = planName;
-                    }
-                    
-                    const contactSection = document.getElementById('kontakt');
-                    if (contactSection) {
-                        const targetPosition = contactSection.getBoundingClientRect().top + window.pageYOffset;
-                        smoothScrollTo(targetPosition - 20, 850);
-                    }
-                });
-            });
-
-            // =========================================================
-            // KONTAKTFORMULÄR VIA EMAILJS (kontot fenrac.se@gmail.com)
-            // Fyll i värdena från emailjs.com:
-            //   publicKey  → Account → General → Public Key
-            //   serviceId  → Email Services (t.ex. service_xxxxxxx)
-            //   templateId → Email Templates (t.ex. template_xxxxxxx)
-            // Mallen kan använda {{plan}}, {{name}}, {{email}} och {{message}}.
-            // =========================================================
-            const EMAILJS_CONFIG = {
-                publicKey: 'djdPQgD_vLZyvcXC-',
-                serviceId: 'service_6p3snwx',
-                templateId: 'template_nvw4yds'
-            };
-            const FALLBACK_EMAIL = 'info@fenrac.se';
-
-            const contactForm = document.getElementById('contactForm');
-            const contactSubmit = document.getElementById('contactSubmit');
-            const contactStatus = document.getElementById('contactStatus');
-            const emailjsReady = window.emailjs && EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId;
-
-            if (emailjsReady) {
-                emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
-            }
-
-            function setContactStatus(text, type) {
-                contactStatus.textContent = text;
-                contactStatus.className = 'form-status' + (type ? ' ' + type : '');
-            }
-
-            if (contactForm) {
-                contactForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-
-                    if (!emailjsReady) {
-                        setContactStatus('Formuläret fungerar inte just nu. Mejla oss på ' + FALLBACK_EMAIL + '.', 'error');
-                        return;
-                    }
-
-                    const planSelectEl = document.getElementById('plan-select');
-                    const params = {
-                        plan: planSelectEl.options[planSelectEl.selectedIndex].text,
-                        name: document.getElementById('name').value.trim(),
-                        email: document.getElementById('email').value.trim(),
-                        message: document.getElementById('message').value.trim()
-                    };
-
-                    const originalText = contactSubmit.textContent;
-                    contactSubmit.disabled = true;
-                    contactSubmit.textContent = 'Skickar…';
-                    setContactStatus('');
-
-                    try {
-                        await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params);
-                        contactForm.reset();
-                        setContactStatus('Tack för ditt meddelande! Fenrac AB återkommer inom kort.', 'success');
-                    } catch (err) {
-                        setContactStatus('Något gick fel när meddelandet skulle skickas. Försök igen eller mejla oss på ' + FALLBACK_EMAIL + '.', 'error');
-                    } finally {
-                        contactSubmit.disabled = false;
-                        contactSubmit.textContent = originalText;
-                    }
-                });
-            }
-
-            // FAQ: filtrera frågor per prisplan
-            const faqFilters = document.querySelectorAll('.faq-filter');
-            const faqItems = document.querySelectorAll('.faq-item');
-
-            faqFilters.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const filter = btn.getAttribute('data-filter');
-                    faqFilters.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    faqItems.forEach(item => {
-                        const match = filter === 'alla' || item.getAttribute('data-plan') === filter;
-                        item.hidden = !match;
-                        if (!match) item.open = false;
-                    });
-                });
-            });
-        });
-    </script>
+  <!-- Konto och molnsynk (Firebase) -->
+  <script src="js/konto/firebase-config.js?v=20261113g"></script>
+  <script src="js/konto/konto.js?v=20261113g"></script>
 </body>
 </html>
