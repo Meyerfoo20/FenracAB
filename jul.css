@@ -1,0 +1,398 @@
+/* =========================================================
+   FENRAC – JULDESIGN (aktiv 20 nov – 25 dec varje år via jul.js)
+   Allt är scopat under html.jul så inget påverkas resten av året.
+   ========================================================= */
+
+html.jul {
+    --jul-red: #b3202a;
+    --jul-red-dark: #8a1820;
+    --jul-green: #1f5b3a;
+    --jul-green-light: #2f7d52;
+    --jul-snow: #ffffff;
+}
+
+/* ---------- Toppbanner med nedräkning ---------- */
+html.jul .jul-banner {
+    position: relative;
+    z-index: 1001;
+    background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 12px, transparent 12px 24px),
+        linear-gradient(90deg, var(--jul-red-dark), var(--jul-red), var(--jul-red-dark));
+    color: var(--text-light);
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-align: center;
+    padding: 0.6rem 3rem;
+    line-height: 1.4;
+}
+
+html.jul .jul-banner strong {
+    color: var(--accent-yellow);
+    font-weight: 700;
+}
+
+html.jul .jul-banner-close {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 0;
+    color: var(--text-light);
+    font-size: 1.2rem;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+html.jul .jul-banner-close:hover { opacity: 1; }
+
+/* ---------- Julbelysning under headern ---------- */
+html.jul .jul-lights {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 50px;
+    pointer-events: none;
+    overflow-x: clip;   /* inget får sticka ut i sidled */
+    overflow-y: visible;
+    z-index: 1;
+}
+
+html.jul .jul-lights::before {
+    /* sladden: en hängande båge mellan varje lampa */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 22' preserveAspectRatio='none'%3E%3Cpath d='M0 1 C30 26 70 26 100 1' fill='none' stroke='%232b2724' stroke-opacity='.6' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") repeat-x 0 0 / calc(100% / var(--n)) 22px;
+}
+
+html.jul .jul-hook {
+    /* fästpunkt i navbarens underkant */
+    position: absolute;
+    top: -3px;
+    left: calc(var(--i) / var(--n) * 100%);
+    width: 5px;
+    height: 5px;
+    margin-left: -2.5px;
+    border-radius: 50%;
+    background: #2b2724;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+html.jul .jul-bulb {
+    position: absolute;
+    top: 21px;
+    left: calc((var(--i) + 0.5) / var(--n) * 100%);
+    transform-origin: 50% -4px;
+    width: 9px;
+    height: 15px;
+    margin-left: -4.5px;
+    border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.85) 0 12%, transparent 35%), var(--c);
+    box-shadow: 0 0 6px 1px var(--c);
+    will-change: opacity;
+    animation: jul-twinkle 2.6s ease-in-out infinite;
+    animation-delay: var(--d);
+}
+
+html.jul .jul-bulb::before {
+    /* sockel */
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 1.5px;
+    width: 6px;
+    height: 5px;
+    background: linear-gradient(90deg, #2b2724, #4a4540, #2b2724);
+    border-radius: 1.5px 1.5px 1px 1px;
+}
+
+html.jul .jul-bulb::after {
+    /* mjuk glöd som tonar ut helt, ingen kant */
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    width: 46px;
+    height: 46px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--c) 0%, transparent 65%);
+    opacity: 0.38;
+    will-change: transform, opacity;
+    animation: jul-glow 2.6s ease-in-out infinite;
+    animation-delay: var(--d);
+}
+
+@keyframes jul-twinkle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.72; }
+}
+
+@keyframes jul-glow {
+    0%, 100% { opacity: 0.38; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 0.14; transform: translate(-50%, -50%) scale(0.85); }
+}
+
+html.jul .jul-lights { transition: opacity 0.25s ease; }
+html.jul body.menu-open .jul-lights { opacity: 0; }
+
+/* ---------- Tomteluva på loggan ---------- */
+html.jul header .logo {
+    position: relative;
+}
+
+html.jul header .logo::before {
+    content: "";
+    position: absolute;
+    /* Placeras relativt loggans storlek så att brättet vilar på F:ets topp */
+    top: 19%;
+    left: 2.6%;
+    width: 15%;
+    aspect-ratio: 100 / 84;
+    height: auto;
+    z-index: 2;
+    transform: translateY(-93%) rotate(-12deg);
+    transform-origin: 40% 100%;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 84'%3E%3Cdefs%3E%3ClinearGradient id='r' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d6303a'/%3E%3Cstop offset='1' stop-color='%239c1a23'/%3E%3C/linearGradient%3E%3CradialGradient id='w' cx='.4' cy='.35' r='.7'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='1' stop-color='%23e4e0da'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M14 62 C16 36 32 14 56 12 C74 10 88 20 90 38 C91 46 89 54 86 60 C82 52 78 40 70 34 C70 44 72 54 74 62 Z' fill='url(%23r)'/%3E%3Cpath d='M70 34 C78 40 82 52 86 60 C88 54 89 48 89 42 C84 36 78 34 70 34 Z' fill='%237d141b' opacity='.55'/%3E%3Cpath d='M22 52 C26 34 40 20 56 18' stroke='%23fff' stroke-opacity='.18' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='86' cy='64' r='9.5' fill='url(%23w)'/%3E%3Cpath d='M8 60 Q4 70 12 74 Q22 79 44 78 Q66 79 76 74 Q84 70 80 60 Q70 55 44 56 Q18 55 8 60 Z' fill='url(%23w)'/%3E%3Cpath d='M14 72 Q30 76 44 75 Q60 76 74 72' stroke='%23cfc9c0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / contain;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.18));
+}
+
+/* ---------- Hero ---------- */
+html.jul .hero-glow {
+    background:
+        radial-gradient(circle at 35% 50%, rgba(179, 32, 42, 0.16) 0%, rgba(244, 238, 228, 0) 60%),
+        radial-gradient(circle at 65% 50%, rgba(31, 91, 58, 0.16) 0%, rgba(244, 238, 228, 0) 60%);
+}
+
+html.jul .hero-title .highlight {
+    color: var(--jul-red);
+}
+
+html.jul .hero-title .highlight::after {
+    content: "✦";
+    position: absolute;
+    top: -0.35em;
+    right: -0.55em;
+    font-size: 0.45em;
+    color: var(--accent-gold);
+    animation: jul-star 3s ease-in-out infinite;
+}
+
+@keyframes jul-star {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50%      { transform: scale(0.7) rotate(20deg); opacity: 0.6; }
+}
+
+/* Julgranskulor som hänger från projektkorten i hero */
+html.jul .hero-postcard {
+    overflow: visible;
+}
+
+html.jul .jul-ornament {
+    position: absolute;
+    top: calc(100% - 2px);
+    left: var(--x);
+    width: 1px;
+    height: var(--len);
+    background: rgba(26, 24, 22, 0.35);
+    transform-origin: top center;
+    /* motverkar kortets lutning så att kulan alltid hänger rakt ner */
+    transform: rotate(var(--counter));
+    will-change: transform;
+    pointer-events: none;
+    z-index: -1;
+    animation: jul-swing 4.5s ease-in-out infinite;
+    animation-delay: var(--d);
+}
+
+html.jul .jul-ornament::before {
+    /* hängare */
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: -4px;
+    width: 9px;
+    height: 6px;
+    background: var(--accent-gold);
+    border-radius: 2px;
+}
+
+html.jul .jul-ornament::after {
+    /* kulan */
+    content: "";
+    position: absolute;
+    top: calc(100% + 3px);
+    left: calc(var(--size) / -2);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, rgba(255,255,255,0.75) 0 8%, transparent 22%), var(--c);
+    box-shadow: inset -4px -6px 10px rgba(0,0,0,0.25), 0 6px 14px rgba(0,0,0,0.12);
+}
+
+@keyframes jul-swing {
+    0%, 100% { transform: rotate(calc(var(--counter) - 4deg)); }
+    50%      { transform: rotate(calc(var(--counter) + 4deg)); }
+}
+
+/* ---------- Knappar ---------- */
+html.jul .btn-primary:hover {
+    background-color: var(--jul-red);
+    border-color: var(--jul-red);
+}
+
+/* ---------- Mörka sektioner: polkagris-kanter ---------- */
+html.jul .full-width-section,
+html.jul .faq-band,
+html.jul footer {
+    position: relative;
+    border-top-color: transparent;
+}
+
+html.jul .full-width-section,
+html.jul .faq-band {
+    border-bottom-color: transparent;
+}
+
+html.jul .full-width-section::before,
+html.jul .full-width-section::after,
+html.jul .faq-band::before,
+html.jul .faq-band::after,
+html.jul footer::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--jul-red) 0 12px,
+        #ffffff 12px 24px
+    );
+    pointer-events: none;
+}
+
+html.jul .full-width-section::before,
+html.jul .faq-band::before,
+html.jul footer::before { top: -2px; }
+
+html.jul .full-width-section::after,
+html.jul .faq-band::after { bottom: -2px; }
+
+html.jul .projects-box {
+    border-color: var(--jul-green-light);
+}
+
+/* ---------- Priser ---------- */
+html.jul .pricing-card:hover {
+    border-color: var(--jul-red);
+}
+
+html.jul .pricing-card.featured {
+    border-color: var(--jul-red);
+    box-shadow: 0 0 0 4px rgba(179, 32, 42, 0.12), 0 20px 40px rgba(26, 24, 22, 0.15);
+}
+
+html.jul .pricing-badge {
+    background: var(--jul-red);
+    color: #fff;
+}
+
+/* ---------- Footer: snödriva ---------- */
+html.jul footer {
+    padding-top: 5rem;
+}
+
+html.jul footer .jul-snowdrift {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    right: 0;
+    height: 26px;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 26' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H400 V10 C380 22 360 8 340 14 C320 22 300 6 280 12 C260 20 240 8 220 16 C200 24 180 6 160 12 C140 20 120 10 100 16 C80 24 60 8 40 14 C20 20 10 12 0 16 Z' fill='%23ffffff' fill-opacity='0.92'/%3E%3C/svg%3E") repeat-x top / 400px 26px;
+}
+
+/* Snöfall i footern */
+html.jul footer {
+    overflow: hidden;
+    padding-bottom: 3rem;
+}
+
+html.jul footer > .footer-container,
+html.jul footer > .footer-bottom {
+    position: relative;
+    z-index: 2;
+}
+
+html.jul .jul-footer-snow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+html.jul footer .jul-snowdrift {
+    z-index: 3;
+}
+
+html.jul .jul-footer-greeting {
+    color: var(--accent-yellow);
+}
+
+/* Mellanstora skärmar: rubriken är så bred att Fornoleon-kortets kulor skulle krocka med den */
+@media (max-width: 1300px) {
+    html.jul .hero-postcard.postcard-2 .jul-ornament { display: none; }
+    html.jul .hero-postcard.postcard-1 .jul-ornament:first-of-type { display: none; }
+}
+
+/* ---------- Mobil ---------- */
+@media (max-width: 768px) {
+    html.jul .jul-banner {
+        font-size: 0.8rem;
+        padding: 0.5rem 2.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    html.jul .jul-banner-extra { display: none; }
+
+    /* Lättare slinga på mobilen */
+    html.jul .jul-lights { height: 34px; }
+    html.jul .jul-lights::before {
+        height: 14px;
+        background-size: calc(100% / var(--n)) 14px;
+    }
+    html.jul .jul-hook { width: 4px; height: 4px; margin-left: -2px; top: -2px; }
+    html.jul .jul-bulb {
+        top: 13px;
+        width: 7px;
+        height: 12px;
+        margin-left: -3.5px;
+        box-shadow: 0 0 4px 0 var(--c);
+    }
+    html.jul .jul-bulb::before { top: -3px; left: 1px; width: 5px; height: 4px; }
+    html.jul .jul-bulb::after { width: 30px; height: 30px; opacity: 0.3; }
+}
+
+/* ---------- Respektera "minska rörelse" ---------- */
+@media (prefers-reduced-motion: reduce) {
+    html.jul .jul-bulb,
+    html.jul .jul-bulb::after,
+    html.jul .jul-ornament,
+    html.jul .hero-title .highlight::after {
+        animation: none;
+    }
+}

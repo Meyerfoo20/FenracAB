@@ -255,6 +255,10 @@
             opacity: 1;
             transform: rotate(-4deg) translateY(0) scale(1);
         }
+        .hero-postcard.loaded.postcard-4 {
+            opacity: 1;
+            transform: rotate(5deg) translateY(0) scale(1);
+        }
 
         .hero-postcard img {
             width: 100%;
@@ -298,6 +302,11 @@
         .postcard-3 {
             bottom: 6%;
             right: 10%;
+        }
+
+        .postcard-4 {
+            bottom: 8%;
+            left: 9%;
         }
 
         .hero-badge {
@@ -1438,6 +1447,8 @@
     </style>
     <!-- EmailJS för kontaktformuläret -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+    <!-- Juldesign: aktiv automatiskt 20 nov – 25 dec varje år (förhandsvisa med ?jul=1) -->
+    <script src="jul.js"></script>
 </head>
 <body>
 
@@ -1487,6 +1498,14 @@
             <div class="postcard-caption">
                 <span class="postcard-title">VD Portfolio</span>
                 <span class="postcard-tag">#03</span>
+            </div>
+        </a>
+
+        <a href="https://untheorized.fenrac.se" target="_blank" rel="noopener noreferrer" class="hero-postcard postcard-4" style="transition-delay: 0.55s;">
+            <img src="Images/untheorized-logo.jpg" alt="Untheorized">
+            <div class="postcard-caption">
+                <span class="postcard-title">Untheorized</span>
+                <span class="postcard-tag">#04</span>
             </div>
         </a>
         
@@ -1557,9 +1576,16 @@
                         <div class="track-desc">wimo.se</div>
                         <div class="arrow-indicator">←</div>
                     </a>
+
+                    <a href="https://untheorized.fenrac.se" target="_blank" rel="noopener noreferrer" class="track-item">
+                        <div class="track-num">07</div>
+                        <div class="track-name">Untheorized</div>
+                        <div class="track-desc">untheorized.fenrac.se</div>
+                        <div class="arrow-indicator">←</div>
+                    </a>
                     
                     <a href="#kontakt" class="track-item highlight-track" style="border-bottom: none;">
-                        <div class="track-num" style="color: var(--text-light);">07</div>
+                        <div class="track-num" style="color: var(--text-light);">08</div>
                         <div class="track-name">Ditt nästa projekt</div>
                         <div class="track-desc">Din idé till verklighet</div>
                         <div class="arrow-indicator">←</div>
