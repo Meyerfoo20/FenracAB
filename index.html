@@ -28,6 +28,11 @@
         "logo": "https://fenrac.se/logo.png",
         "image": "https://fenrac.se/webb-logo.png",
         "email": "info@fenrac.se",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "Organisationsnummer",
+            "value": "559612-4981"
+        },
         "sameAs": [
             "https://www.linkedin.com/company/fenrac-ab"
         ],
@@ -1385,6 +1390,12 @@
             
             .mobile-menu-btn {
                 display: flex;
+                z-index: 1004; /* krysset ligger alltid överst */
+            }
+
+            /* Öppen meny: loggan tonas ner bakom den mörka bakgrunden som resten av sidan */
+            body.menu-open header .logo {
+                z-index: 999;
             }
 
             nav {
@@ -1401,7 +1412,7 @@
                 transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.35s;
                 visibility: hidden;
                 overflow-y: auto;
-                z-index: 1001;
+                z-index: 1003; /* över loggan (1002), så menyn inte glider in under den */
                 display: flex;
                 flex-direction: column;
             }
@@ -1997,7 +2008,7 @@
         </div>
 
         <div class="footer-bottom">
-            <div>© 2026 Fenrac AB. Alla rättigheter förbehållna.</div>
+            <div>© 2026 Fenrac AB · Org.nr 559612-4981</div>
             <a href="#" class="back-to-top">↑ Till toppen</a>
         </div>
     </footer>
