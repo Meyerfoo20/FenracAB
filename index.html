@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fenrac AB – Webbyrå i Helsingborg | Webbplatser & apputveckling</title>
-    <meta name="description" content="Fenrac AB är en webbyrå i Helsingborg. Vi hjälper företag att utveckla sin digitala närvaro med moderna webbplatser, e-handel och apputveckling. Hemsidor från 10 000 kr.">
+    <meta name="description" content="Fenrac AB är en webbyrå i Helsingborg. Vi hjälper företag och privatpersoner att utveckla sin digitala närvaro med moderna webbplatser, e-handel och apputveckling. Hemsidor från 10 000 kr.">
     <link rel="canonical" href="https://fenrac.se/">
 
     <!-- Förhandsvisning när sidan delas (LinkedIn, Messenger, Slack m.fl.) -->
@@ -23,21 +23,49 @@
         "@type": "ProfessionalService",
         "@id": "https://fenrac.se/#foretag",
         "name": "Fenrac AB",
-        "description": "Webbyrå i Helsingborg – webbplatser och apputveckling för företag och privatpersoner. Vi hjälper företag att utveckla sin digitala närvaro genom moderna webbplatser, smarta digitala lösningar och apputveckling.",
+        "description": "Webbyrå i Helsingborg – webbplatser och apputveckling för företag och privatpersoner. Vi hjälper företag och privatpersoner att utveckla sin digitala närvaro genom moderna webbplatser, smarta digitala lösningar och apputveckling.",
         "url": "https://fenrac.se/",
         "logo": "https://fenrac.se/logo.png",
         "image": "https://fenrac.se/webb-logo.png",
         "email": "info@fenrac.se",
+        "sameAs": [
+            "https://www.linkedin.com/company/fenrac-ab"
+        ],
         "priceRange": "Från 10 000 kr",
+        "foundingDate": "2026",
+        "slogan": "Där idéer blir till verklighet.",
+        "audience": {
+            "@type": "Audience",
+            "audienceType": "Företag och privatpersoner"
+        },
+        "makesOffer": [
+            {
+                "@type": "Offer",
+                "name": "Basic",
+                "description": "Vi designar och bygger hemsidan efter kundens önskemål fram till lansering.",
+                "priceSpecification": { "@type": "PriceSpecification", "minPrice": 10000, "priceCurrency": "SEK" }
+            },
+            {
+                "@type": "Offer",
+                "name": "Pro",
+                "description": "Skräddarsydd hemsida eller app med löpande underhåll och utveckling efter lansering. Startavgift 10 000 kr.",
+                "priceSpecification": { "@type": "UnitPriceSpecification", "price": 3000, "priceCurrency": "SEK", "unitText": "månad" }
+            },
+            {
+                "@type": "Offer",
+                "name": "Custom",
+                "description": "För appar, större system och varumärkeskoncept. Pris efter projekt."
+            }
+        ],
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Helsingborg",
             "addressCountry": "SE"
         },
-        "areaServed": {
-            "@type": "City",
-            "name": "Helsingborg"
-        },
+        "areaServed": [
+            { "@type": "City", "name": "Helsingborg" },
+            { "@type": "Country", "name": "Sverige" }
+        ],
         "knowsAbout": ["Webbdesign", "Webbutveckling", "Företagshemsidor", "E-handel", "Apputveckling", "Mobilappar"],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
@@ -1212,6 +1240,63 @@
             line-height: 1.5;
         }
 
+        /* Taggar i footern: en smal rad med de viktigaste fakta om Fenrac */
+        .footer-tags-row {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.4rem 0;
+            border-bottom: 1px solid rgba(244, 238, 228, 0.15);
+            position: relative;
+            z-index: 2;
+            overflow: hidden; /* gömmer snedstrecket som hamnar först på varje rad */
+        }
+
+        .footer-tags {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 0 -2rem; /* lika brett som ett snedstreck */
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            row-gap: 0.45rem;
+        }
+
+        .footer-tags li {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light-muted);
+            white-space: nowrap;
+        }
+
+        .footer-tags li::before {
+            content: "/";
+            display: inline-block;
+            width: 2rem;
+            text-align: center;
+            color: var(--accent-gold);
+            opacity: 0.7;
+        }
+
+        .footer-tags li.tag-accent {
+            color: var(--accent-yellow);
+        }
+
+        @media (max-width: 768px) {
+            .footer-tags li {
+                font-size: 0.68rem;
+                letter-spacing: 1px;
+            }
+            .footer-tags {
+                margin-left: -1.4rem;
+            }
+            .footer-tags li::before {
+                width: 1.4rem;
+            }
+        }
+
         .footer-column h4 {
             color: var(--accent-yellow);
             font-size: 0.95rem;
@@ -1562,7 +1647,7 @@
         </div>
 
         <h1 class="hero-title">Där idéer blir till <span class="highlight">verklighet.</span></h1>
-        <p class="hero-subtitle">Vi hjälper företag att utveckla sin digitala närvaro genom moderna webbplatser, smarta digitala lösningar och apputveckling.</p>
+        <p class="hero-subtitle">Vi hjälper företag och privatpersoner att utveckla sin digitala närvaro genom moderna webbplatser, smarta digitala lösningar och apputveckling.</p>
         
         <div class="hero-actions">
             <a href="#kontakt" class="btn-primary">Starta projekt <span class="btn-arrow">→</span></a>
@@ -1890,9 +1975,25 @@
                 <ul>
                     <li><a href="#kontakt">Starta ett projekt</a></li>
                     <li><a href="mailto:info@fenrac.se">info@fenrac.se</a></li>
+                    <li><a href="https://www.linkedin.com/company/fenrac-ab" target="_blank" rel="noopener noreferrer me">LinkedIn ↗</a></li>
                     <li><span style="color: var(--accent-yellow);">Est. 2026 // Sweden</span></li>
                 </ul>
             </div>
+        </div>
+
+        <div class="footer-tags-row">
+                <ul class="footer-tags" aria-label="Fenrac AB i korthet">
+                    <li class="tag-accent">Webbyrå i Helsingborg</li>
+                    <li>Webbdesign</li>
+                    <li>Webbutveckling</li>
+                    <li>Företagshemsidor</li>
+                    <li>E-handel</li>
+                    <li>Apputveckling</li>
+                    <li>Teknisk support</li>
+                    <li>Företag &amp; privatpersoner</li>
+                    <li>Unik design – inga mallar</li>
+                    <li class="tag-accent">Hemsidor från 10 000 kr</li>
+                </ul>
         </div>
 
         <div class="footer-bottom">
