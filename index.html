@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fenrac AB – Webbyrå i Helsingborg | Webbplatser & apputveckling</title>
-    <meta name="description" content="Fenrac AB är en webbyrå i Helsingborg. Vi hjälper företag och privatpersoner att utveckla sin digitala närvaro med moderna webbplatser, e-handel och apputveckling. Hemsidor från 10 000 kr.">
+    <meta name="description" content="Fenrac AB är en webbyrå i Helsingborg. Vi hjälper företag och privatpersoner att utveckla sin digitala närvaro med moderna webbplatser, e-handel och apputveckling. Hemsidor från 7 000 kr.">
     <link rel="canonical" href="https://fenrac.se/">
 
     <!-- Förhandsvisning när sidan delas (LinkedIn, Messenger, Slack m.fl.) -->
@@ -36,7 +36,7 @@
         "sameAs": [
             "https://www.linkedin.com/company/fenrac-ab"
         ],
-        "priceRange": "Från 10 000 kr",
+        "priceRange": "Från 7 000 kr",
         "foundingDate": "2026",
         "slogan": "Där idéer blir till verklighet.",
         "audience": {
@@ -47,13 +47,19 @@
             {
                 "@type": "Offer",
                 "name": "Basic",
-                "description": "Vi designar och bygger hemsidan efter kundens önskemål fram till lansering.",
-                "priceSpecification": { "@type": "PriceSpecification", "minPrice": 10000, "priceCurrency": "SEK" }
+                "description": "En mindre hemsida som vi designar och bygger efter kundens önskemål fram till lansering.",
+                "priceSpecification": { "@type": "PriceSpecification", "minPrice": 7000, "priceCurrency": "SEK" }
             },
             {
                 "@type": "Offer",
                 "name": "Pro",
-                "description": "Skräddarsydd hemsida eller app med löpande underhåll och utveckling efter lansering. Startavgift 10 000 kr.",
+                "description": "En större hemsida med fler sidor och funktioner, som vi designar och bygger efter kundens önskemål fram till lansering.",
+                "priceSpecification": { "@type": "PriceSpecification", "minPrice": 12000, "priceCurrency": "SEK" }
+            },
+            {
+                "@type": "Offer",
+                "name": "Elite",
+                "description": "Skräddarsydd hemsida eller app med löpande underhåll och utveckling efter lansering. Startavgift 12 000 kr.",
                 "priceSpecification": { "@type": "UnitPriceSpecification", "price": 3000, "priceCurrency": "SEK", "unitText": "månad" }
             },
             {
@@ -704,8 +710,8 @@
 
         /* PRICING SECTION */
         .pricing-section {
-            padding: 5rem 4rem;
-            max-width: 1300px;
+            padding: 5rem 2.5rem;
+            max-width: 1480px; /* bredare kort med fyra planer */
             margin: 0 auto;
         }
 
@@ -727,21 +733,105 @@
             font-size: 1.05rem;
         }
 
+        /* KAMPANJ (visas bara när <html> har klassen "kampanj") */
+        .campaign-only { display: none; }
+        html.kampanj .campaign-only { display: inline; }
+        html.kampanj .regular-only { display: none; }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        /* En enkel rad ovanför korten */
+        .campaign-note {
+            display: none;
+            margin: 1.6rem auto 0 auto;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-main);
+        }
+        html.kampanj .campaign-note { display: block; }
+
+        @media (max-width: 600px) {
+            .campaign-note {
+                font-size: 0.72rem;
+                letter-spacing: 1.2px;
+                white-space: nowrap;
+            }
+        }
+
+        .campaign-note::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            margin-right: 0.7rem;
+            vertical-align: middle;
+            transform: translateY(-1px);
+        }
+
+        /* Ordinarie pris: liten, dämpad och överstruken */
+        .pricing-price s,
+        .pricing-desc s {
+            font-weight: 400;
+            color: var(--text-muted);
+            opacity: 0.75;
+            white-space: nowrap;
+            text-decoration-thickness: 1px;
+        }
+
+        .pricing-price s {
+            display: block;
+            font-size: 0.58em;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .pricing-desc s {
+            display: block;
+            font-size: 0.85em;
+            margin-bottom: 0.2rem;
+        }
+
+        .pricing-card.featured .pricing-price s,
+        .pricing-card.featured .pricing-desc s {
+            color: var(--text-light-muted);
+        }
+
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
             align-items: stretch;
+        }
+
+        /* Fyra prisplaner: två i bredd på mellanstora skärmar */
+        @media (max-width: 1200px) and (min-width: 951px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
         }
 
         .pricing-card {
             background: #ffffff;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 3rem 2.2rem;
+            padding: 2.2rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            gap: 1.6rem;
             position: relative;
             box-shadow: 0 10px 30px rgba(26, 24, 22, 0.04);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -778,7 +868,7 @@
             font-size: 1.8rem;
             text-transform: uppercase;
             letter-spacing: -0.5px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.6rem;
         }
 
         .pricing-price {
@@ -786,7 +876,7 @@
             font-size: 1.45rem;
             font-weight: 700;
             color: var(--accent-gold);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.1rem;
         }
 
         .pricing-card.featured .pricing-price {
@@ -811,6 +901,17 @@
             width: 100%;
             justify-content: center;
             text-align: center;
+            position: relative;
+        }
+
+        /* Pilen ligger i högerkanten så att knapptexten blir exakt centrerad */
+        .pricing-card .btn-primary .btn-arrow {
+            position: absolute;
+            right: 1.4rem;
+        }
+
+        .pricing-card.featured .btn-primary .btn-arrow {
+            color: var(--bg-dark); /* syns på den gula knappen */
         }
 
         .pricing-card.featured .btn-primary {
@@ -1593,6 +1694,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
     <!-- Juldesign: aktiv automatiskt 20 nov – 25 dec varje år (förhandsvisa med ?jul=1) -->
     <script src="jul.js"></script>
+    <!-- Kampanj: 2 000 kr rabatt på Basic, Pro och Elite, 17 nov – 20 dec 2026.
+         Slås av automatiskt efter 20 december. Förhandsvisa: ?kampanj=1, stäng av: ?kampanj=0 -->
+    <script>
+        (function () {
+            var now = new Date();
+            var start = new Date(2026, 10, 17);      // 17 november 2026
+            var end = new Date(2026, 11, 21);        // till och med 20 december 2026
+            var q = location.search;
+            var on = /[?&]kampanj=1/.test(q) ? true : /[?&]kampanj=0/.test(q) ? false : (now >= start && now < end);
+            if (on) document.documentElement.classList.add('kampanj');
+        })();
+    </script>
 </head>
 <body>
 
@@ -1744,32 +1857,43 @@
         <div class="pricing-header">
             <h2>Prisplaner</h2>
             <p>Välj den modell som passar bäst för ditt nästa digitala projekt.</p>
+            <p class="campaign-note">Priserna gäller t.o.m. 20 dec</p>
         </div>
 
         <div class="pricing-grid">
-            <!-- Basic Plan -->
+            <!-- Basic -->
             <div class="pricing-card">
                 <div>
                     <h3>Basic</h3>
-                    <div class="pricing-price">Från 10 000 kr</div>
-                    <p class="pricing-desc">Vi bygger och formar hemsidan efter kundens förfrågan, men då endast fram tills lanseringen.</p>
+                    <div class="pricing-price"><span class="regular-only">Från 7 000 kr</span><span class="campaign-only"><s><span class="sr-only">Ordinarie pris </span>7 000 kr</s>Från 5 000 kr</span></div>
+                    <p class="pricing-desc">En mindre hemsida som vi bygger och formar efter dina önskemål, fram till lanseringen.</p>
                 </div>
                 <button type="button" class="btn-secondary select-plan-btn" data-plan="Basic">Välj Basic</button>
             </div>
 
-            <!-- Pro Plan -->
+            <!-- Pro -->
+            <div class="pricing-card">
+                <div>
+                    <h3>Pro</h3>
+                    <div class="pricing-price"><span class="regular-only">Från 12 000 kr</span><span class="campaign-only"><s><span class="sr-only">Ordinarie pris </span>12 000 kr</s>Från 10 000 kr</span></div>
+                    <p class="pricing-desc">En större hemsida med fler sidor och funktioner. Vi bygger och formar den efter dina önskemål, fram till lanseringen.</p>
+                </div>
+                <button type="button" class="btn-secondary select-plan-btn" data-plan="Pro">Välj Pro</button>
+            </div>
+
+            <!-- Elite -->
             <div class="pricing-card featured">
                 <div class="pricing-badge">Populärast</div>
                 <div>
-                    <h3>Pro</h3>
-                    <div class="pricing-price">3 000 kr / mån</div>
-                    <p class="pricing-desc" style="margin-bottom: 1rem;"><strong style="color: var(--text-light);">Startavgift:</strong> 10 000 kr</p>
+                    <h3>Elite</h3>
+                    <div class="pricing-price"><span class="campaign-only"><s><span class="sr-only">Ordinarie startavgift </span>12 000 kr</s></span>3 000 kr / mån</div>
+                    <p class="pricing-desc" style="margin-bottom: 1rem;"><strong style="color: var(--text-light);">Startavgift:</strong> <span class="regular-only">12 000 kr</span><span class="campaign-only">10 000 kr</span></p>
                     <p class="pricing-desc">Vi bygger och skräddarsyr hemsidan/appen tillsammans med kunden. Utvecklar projektet under en längre tid med tydlig kommunikation och kontinuerligt underhåll även efter lansering.</p>
                 </div>
-                <button type="button" class="btn-primary select-plan-btn" data-plan="Mile">Välj Pro <span class="btn-arrow">→</span></button>
+                <button type="button" class="btn-primary select-plan-btn" data-plan="Elite">Välj Elite <span class="btn-arrow">→</span></button>
             </div>
 
-            <!-- Custom Plan -->
+            <!-- Custom -->
             <div class="pricing-card">
                 <div>
                     <h3>Custom</h3>
@@ -1788,12 +1912,13 @@
         <div class="faq-intro">
             <span class="faq-kicker">Vanliga frågor //</span>
             <h2>Vilken plan passar dig?</h2>
-            <p>Här går vi djupare in på vad som ingår i Basic, Pro och Custom, så att du vet exakt vad du får innan du hör av dig.</p>
+            <p>Här går vi djupare in på vad som ingår i Basic, Pro, Elite och Custom, så att du vet exakt vad du får innan du hör av dig.</p>
 
             <div class="faq-filters" role="group" aria-label="Filtrera frågor">
                 <button type="button" class="faq-filter active" data-filter="alla">Alla</button>
                 <button type="button" class="faq-filter" data-filter="basic">Basic</button>
                 <button type="button" class="faq-filter" data-filter="pro">Pro</button>
+                <button type="button" class="faq-filter" data-filter="elite">Elite</button>
                 <button type="button" class="faq-filter" data-filter="custom">Custom</button>
                 <button type="button" class="faq-filter" data-filter="allmant">Allmänt</button>
             </div>
@@ -1806,7 +1931,7 @@
                 <details class="faq-item" data-plan="basic">
                     <summary><span class="faq-tag">Basic</span><span class="faq-question">Vad ingår i Basic?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
-                        <p>Med Basic designar och bygger vi din hemsida utifrån dina önskemål, hela vägen fram till lansering. Du berättar vad du behöver, vi tar fram ett förslag och formar sidan tills du är nöjd.</p>
+                        <p>Med Basic designar och bygger vi en mindre hemsida utifrån dina önskemål, hela vägen fram till lansering. Du berättar vad du behöver, vi tar fram ett förslag och formar sidan tills du är nöjd.</p>
                         <!-- KONTROLLERA: lista vad som faktiskt ingår -->
                         <ul>
                             <li>Unik design – ingen färdig mall</li>
@@ -1817,9 +1942,9 @@
                 </details>
 
                 <details class="faq-item" data-plan="basic">
-                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Varför står det "från" 10 000 kr?</span><span class="faq-icon">+</span></summary>
+                    <summary><span class="faq-tag">Basic</span><span class="faq-question">Varför står det "från" 7 000 kr?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
-                        <p>10 000 kr är startpriset för en mindre hemsida. Det slutliga priset beror på hur stort projektet är, till exempel hur många sidor och vilka funktioner du behöver.</p>
+                        <p>7 000 kr är startpriset för en mindre hemsida. Det slutliga priset beror på hur stort projektet är, till exempel hur många sidor och vilka funktioner du behöver.</p>
                         <!-- KONTROLLERA: att ni ger fast pris innan start -->
                         <p>Efter vårt första samtal får du ett tydligt pris innan vi börjar, så att det inte blir några överraskningar.</p>
                     </div>
@@ -1828,9 +1953,9 @@
                 <details class="faq-item" data-plan="basic">
                     <summary><span class="faq-tag">Basic</span><span class="faq-question">Vad händer efter lanseringen?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
-                        <p>Basic gäller fram till lanseringen. Efter det ingår inget löpande underhåll eller vidareutveckling.</p>
+                        <p>Basic och Pro gäller fram till lanseringen. Efter det ingår inget löpande underhåll eller vidareutveckling.</p>
                         <!-- KONTROLLERA: hur ni hanterar ändringar efter lansering -->
-                        <p>Vill du göra ändringar senare kan du kontakta oss för en offert, eller gå över till <strong>Pro</strong> om du vill att vi tar hand om sidan löpande.</p>
+                        <p>Vill du göra ändringar senare kan du kontakta oss för en offert, eller gå över till <strong>Elite</strong> om du vill att vi tar hand om sidan löpande.</p>
                     </div>
                 </details>
 
@@ -1838,7 +1963,27 @@
                 <details class="faq-item" data-plan="pro">
                     <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad är skillnaden mellan Basic och Pro?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
-                        <p>Med Basic bygger vi sidan och lämnar över den vid lansering. Med <strong>Pro</strong> blir vi din digitala partner över tid:</p>
+                        <p>Både Basic och Pro bygger vi efter dina önskemål fram till lansering. Skillnaden är storleken på hemsidan:</p>
+                        <ul>
+                            <li><strong>Basic</strong> passar en mindre hemsida</li>
+                            <li><strong>Pro</strong> passar en större hemsida med fler sidor och funktioner</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="faq-item" data-plan="pro">
+                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Varför står det "från" 12 000 kr?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>12 000 kr är startpriset för en större hemsida. Det slutliga priset beror på hur många sidor och vilka funktioner du behöver.</p>
+                        <p>Efter vårt första samtal får du ett tydligt pris innan vi börjar, så att det inte blir några överraskningar.</p>
+                    </div>
+                </details>
+
+                <!-- ELITE -->
+                <details class="faq-item" data-plan="elite">
+                    <summary><span class="faq-tag">Elite</span><span class="faq-question">Vad är skillnaden mellan Pro och Elite?</span><span class="faq-icon">+</span></summary>
+                    <div class="faq-answer">
+                        <p>Med Basic och Pro bygger vi sidan och lämnar över den vid lansering. Med <strong>Elite</strong> blir vi din digitala partner över tid:</p>
                         <ul>
                             <li>Vi skräddarsyr hemsidan eller appen <strong>tillsammans</strong> med dig</li>
                             <li>Projektet utvecklas under en längre period i stället för att vara klart vid ett datum</li>
@@ -1847,8 +1992,8 @@
                     </div>
                 </details>
 
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad täcker startavgiften på 10 000 kr?</span><span class="faq-icon">+</span></summary>
+                <details class="faq-item" data-plan="elite">
+                    <summary><span class="faq-tag">Elite</span><span class="faq-question">Vad täcker startavgiften på 12 000 kr?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
                         <!-- KONTROLLERA: vad startavgiften täcker och när månadsavgiften börjar -->
                         <p>Startavgiften täcker arbetet med att ta fram och bygga den första versionen av din hemsida eller app. Den betalas en gång, i början av samarbetet.</p>
@@ -1856,8 +2001,8 @@
                     </div>
                 </details>
 
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Vad får jag för 3 000 kr i månaden?</span><span class="faq-icon">+</span></summary>
+                <details class="faq-item" data-plan="elite">
+                    <summary><span class="faq-tag">Elite</span><span class="faq-question">Vad får jag för 3 000 kr i månaden?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
                         <!-- KONTROLLERA: exakt vad som ingår i månadsavgiften -->
                         <p>Månadsavgiften täcker det löpande arbetet med din sida, till exempel:</p>
@@ -1870,8 +2015,8 @@
                     </div>
                 </details>
 
-                <details class="faq-item" data-plan="pro">
-                    <summary><span class="faq-tag">Pro</span><span class="faq-question">Finns det någon bindningstid?</span><span class="faq-icon">+</span></summary>
+                <details class="faq-item" data-plan="elite">
+                    <summary><span class="faq-tag">Elite</span><span class="faq-question">Finns det någon bindningstid?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
                         <!-- KONTROLLERA: skriv era faktiska villkor om bindningstid och uppsägning -->
                         <p>Bindningstid och uppsägningstid går vi igenom tillsammans och skriver in i avtalet innan vi startar, så att du vet exakt vad som gäller.</p>
@@ -1882,7 +2027,7 @@
                 <details class="faq-item" data-plan="custom">
                     <summary><span class="faq-tag">Custom</span><span class="faq-question">När passar Custom?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
-                        <p>Custom är till för projekt som inte passar in i Basic eller Pro. Det kan till exempel vara:</p>
+                        <p>Custom är till för projekt som inte passar in i Basic, Pro eller Elite. Det kan till exempel vara:</p>
                         <ul>
                             <li>En app eller ett större system</li>
                             <li>Ett helt varumärkeskoncept, inte bara en hemsida</li>
@@ -1910,7 +2055,7 @@
                     <summary><span class="faq-tag">Allmänt</span><span class="faq-question">Kan jag byta plan senare?</span><span class="faq-icon">+</span></summary>
                     <div class="faq-answer">
                         <!-- KONTROLLERA: att det går att byta plan -->
-                        <p>Ja. Har du börjat med Basic och vill ha löpande hjälp efter lanseringen kan du gå över till Pro. Hör av dig så hittar vi ett upplägg som passar.</p>
+                        <p>Ja. Har du börjat med Basic eller Pro och vill ha löpande hjälp efter lanseringen kan du gå över till Elite. Hör av dig så hittar vi ett upplägg som passar.</p>
                     </div>
                 </details>
 
@@ -1940,8 +2085,9 @@
                 <label for="plan-select">Välj Prisplan *</label>
                 <select id="plan-select" class="form-control" required>
                     <option value="" disabled selected>-- Välj en prisplan --</option>
-                    <option value="Basic">Basic (Från 10 000 kr)</option>
-                    <option value="Mile">Pro (3 000 kr / mån + startavgift)</option>
+                    <option value="Basic" data-kampanj="Basic (Kampanj: från 5 000 kr)">Basic (Från 7 000 kr)</option>
+                    <option value="Pro" data-kampanj="Pro (Kampanj: från 10 000 kr)">Pro (Från 12 000 kr)</option>
+                    <option value="Elite" data-kampanj="Elite (3 000 kr / mån + kampanjstartavgift 10 000 kr)">Elite (3 000 kr / mån + startavgift 12 000 kr)</option>
                     <option value="Custom">Custom (Varierande)</option>
                 </select>
             </div>
@@ -2003,7 +2149,7 @@
                     <li>Teknisk support</li>
                     <li>Företag &amp; privatpersoner</li>
                     <li>Unik design – inga mallar</li>
-                    <li class="tag-accent">Hemsidor från 10 000 kr</li>
+                    <li class="tag-accent">Hemsidor från 7 000 kr</li>
                 </ul>
         </div>
 
@@ -2258,6 +2404,14 @@
                 });
             });
         });
+    </script>
+    <script>
+        // Kampanj: visa kampanjpriserna i formulärets lista (och i mejlet som skickas)
+        if (document.documentElement.classList.contains('kampanj')) {
+            document.querySelectorAll('#plan-select option[data-kampanj]').forEach(function (o) {
+                o.textContent = o.getAttribute('data-kampanj');
+            });
+        }
     </script>
 </body>
 </html>

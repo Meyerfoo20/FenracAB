@@ -144,6 +144,8 @@ html.jul .jul-bulb::after {
 
 html.jul .jul-lights { transition: opacity 0.25s ease; }
 html.jul body.menu-open .jul-lights { opacity: 0; }
+/* När mobilmenyn är öppen ska bannern ligga under menyn och den mörka bakgrunden */
+html.jul body.menu-open .jul-banner { z-index: 999; }
 
 /* ---------- Tomteluva på loggan ---------- */
 html.jul header .logo {
