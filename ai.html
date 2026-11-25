@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fenrac AB – AI-versionen (parodi)</title>
+    <!-- Parodisida: hur fenrac.se hade sett ut om den bara var byggd med AI.
+         Ska inte indexeras av Google eller AI-tjänster – den riktiga sidan är index.html -->
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://fenrac.se/">
+    <link rel="icon" type="image/png" href="webb-logo.png">
+    <!-- Övergång mellan riktiga sidan och AI-sidan: tona till svart och tona in igen -->
+    <style>
+        .page-fade {
+            position: fixed;
+            inset: 0;
+            z-index: 2147483000;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+        .page-fade.on { opacity: 1; pointer-events: all; }
+        html.fade-from-black body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 2147483000;
+            background: #000;
+            pointer-events: none;
+            animation: fadeFromBlack 0.8s 0.15s ease forwards;
+        }
+        @keyframes fadeFromBlack { to { opacity: 0; visibility: hidden; } }
+        @media (prefers-reduced-motion: reduce) {
+            .page-fade { transition: none; }
+            html.fade-from-black body::after { display: none; }
+        }
+    </style>
+    <script>
+        (function () {
+            try {
+                if (sessionStorage.getItem('fenracFade') === '1') {
+                    sessionStorage.removeItem('fenracFade');
+                    document.documentElement.classList.add('fade-from-black');
+                }
+            } catch (e) {}
+        })();
+        // Tonar skärmen till svart och går sedan till url (nästa sida tonas in ur svart)
+        function fenracFadeTo(url) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { window.location.href = url; return; }
+            var o = document.createElement('div');
+            o.className = 'page-fade';
+            document.body.appendChild(o);
+            requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('on'); }); });
+            try { sessionStorage.setItem('fenracFade', '1'); } catch (e) {}
+            setTimeout(function () { window.location.href = url; }, 650);
+        }
+        // Bakåtknappen (sidan kommer från cache): ta bort den svarta ytan
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted) {
+                var f = document.querySelectorAll('.page-fade');
+                for (var i = 0; i < f.length; i++) f[i].remove();
+            }
+        });
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Fenracs egna färger – men i en typisk "AI-mall" */
+        :root {
+            --bg: #f4eee4;
+            --surface: #ffffff;
+            --dark: #1a1816;
+            --text: #1a1816;
+            --muted: #6c665c;
+            --gold: #d89f00;
+            --yellow: #f3c614;
+            --border: rgba(26, 24, 22, 0.08);
+            --grad: linear-gradient(135deg, #d89f00 0%, #f3c614 100%);
+            --shadow: 0 1px 2px rgba(26, 24, 22, 0.04), 0 10px 30px rgba(26, 24, 22, 0.06);
+            --shadow-lg: 0 2px 4px rgba(26, 24, 22, 0.04), 0 24px 50px rgba(26, 24, 22, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 48px; /* plats för parodibannern */
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* Den obligatoriska mjuka bakgrundsglöden */
+        .glow {
+            position: absolute;
+            top: -180px;
+            left: 50%;
+            width: 900px;
+            height: 600px;
+            transform: translateX(-50%);
+            background: radial-gradient(closest-side, rgba(243, 198, 20, 0.28), rgba(243, 198, 20, 0));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gradient-text {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .container { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+        section { padding: 6rem 0; position: relative; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(216, 159, 0, 0.1);
+            border: 1px solid rgba(216, 159, 0, 0.25);
+            color: #8a6600;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-head { text-align: center; max-width: 660px; margin: 0 auto 3.5rem auto; }
+        .section-head h2 { font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.12; letter-spacing: -1.2px; margin-bottom: 1rem; }
+        .section-head p { color: var(--muted); font-size: 1.1rem; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.9rem 1.7rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--grad);
+            color: var(--dark);
+            box-shadow: 0 6px 20px rgba(216, 159, 0, 0.35);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(216, 159, 0, 0.45); }
+
+        .btn-outline {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline:hover { transform: translateY(-2px); }
+
+        .btn-dark { background: var(--dark); color: #fff; }
+        .btn-dark:hover { transform: translateY(-2px); }
+
+        .icon-tile {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: var(--grad);
+            color: var(--dark);
+            margin-bottom: 1.3rem;
+            box-shadow: 0 6px 16px rgba(216, 159, 0, 0.3);
+        }
+
+        .icon-tile svg { width: 24px; height: 24px; }
+
+        /* ---------- Parodibanner överst ---------- */
+        .parody-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0 1rem;
+            background: var(--dark);
+            color: #f4eee4;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .parody-bar .show-sm { display: none; }
+
+        .ai-switch {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font: inherit;
+            color: inherit;
+            padding: 0.25rem;
+        }
+
+        .ai-switch .track {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            border-radius: 999px;
+            background: var(--grad);
+            transition: background 0.3s ease;
+        }
+
+        .ai-switch .knob {
+            position: absolute;
+            top: 3px;
+            left: 27px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ai-switch[aria-checked="true"]:hover .knob,
+        .ai-switch[aria-checked="true"]:focus-visible .knob { left: 19px; }
+        .ai-switch[aria-checked="true"]:hover .track { box-shadow: 0 0 0 3px rgba(243, 198, 20, 0.35); }
+        .ai-switch .track { transition: background 0.3s ease, box-shadow 0.3s ease; }
+        .ai-switch[aria-checked="false"] .track { background: #4a4540; }
+        .ai-switch[aria-checked="false"] .knob { left: 3px; background: #f4eee4; }
+        .ai-switch:focus-visible .track { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+        /* ---------- Nav ---------- */
+        nav.ai-nav {
+            position: sticky;
+            top: 48px;
+            z-index: 50;
+            padding: 0.9rem 0;
+            background: rgba(244, 238, 228, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .ai-logo { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; display: inline-flex; align-items: center; gap: 0.45rem; }
+        .ai-logo .mark { width: 30px; height: 30px; border-radius: 9px; background: var(--grad); display: grid; place-items: center; font-size: 0.95rem; color: var(--dark); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; color: var(--muted); font-weight: 500; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-inner .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+
+        /* ---------- Hero ---------- */
+        .hero { text-align: center; padding: 6.5rem 0 4.5rem 0; overflow: hidden; }
+        .hero h1 { font-size: clamp(2.6rem, 6.5vw, 4.6rem); font-weight: 800; line-height: 1.05; letter-spacing: -2.5px; margin-bottom: 1.4rem; }
+        .hero p.lead { color: var(--muted); font-size: clamp(1.05rem, 1.8vw, 1.22rem); max-width: 640px; margin: 0 auto 2.4rem auto; }
+        .hero-actions { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; }
+
+        .trusted { margin-top: 4rem; color: var(--muted); font-size: 0.85rem; font-weight: 500; }
+        .trusted-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 2.8rem; margin-top: 1rem; font-size: 1.15rem; font-weight: 700; color: rgba(26, 24, 22, 0.4); }
+
+        /* ---------- Siffror (alla stämmer!) ---------- */
+        .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+        .stat { padding: 1.8rem 1.4rem; text-align: center; }
+        .stat strong { display: block; font-size: 2.3rem; font-weight: 800; line-height: 1.1; letter-spacing: -1px; }
+        .stat span { color: var(--muted); font-size: 0.92rem; }
+
+        /* ---------- Funktionskort ---------- */
+        .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+        .feature { padding: 2rem; }
+        .feature h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+        .feature p { color: var(--muted); font-size: 0.98rem; }
+
+        /* ---------- Projekt ---------- */
+        .projects { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+        .project { padding: 1.6rem; display: flex; flex-direction: column; gap: 0.25rem; }
+        .project .initial { width: 44px; height: 44px; border-radius: 12px; background: var(--dark); color: var(--yellow); display: grid; place-items: center; font-weight: 800; font-size: 1.1rem; margin-bottom: 1rem; }
+        .project h3 { font-size: 1.08rem; font-weight: 700; }
+        .project span { color: var(--muted); font-size: 0.88rem; }
+        .project .go { margin-top: auto; padding-top: 1rem; font-weight: 600; color: #8a6600; font-size: 0.9rem; }
+        .project.highlight { background: var(--dark); color: #fff; }
+        .project.highlight span { color: #b0a99e; }
+        .project.highlight .go { color: var(--yellow); }
+        .project.highlight .initial { background: var(--grad); color: var(--dark); }
+
+        /* ---------- Priser ---------- */
+        .pricing { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; align-items: stretch; }
+        .plan { padding: 2.1rem 1.7rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
+        .plan h3 { font-size: 1.25rem; font-weight: 700; }
+        .plan .price { font-size: 1.9rem; font-weight: 800; line-height: 1.15; letter-spacing: -0.8px; }
+        .plan .price small { display: block; font-size: 0.88rem; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+        .plan ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; color: var(--muted); font-size: 0.94rem; }
+        .plan li { display: flex; gap: 0.55rem; align-items: flex-start; }
+        .plan li svg { flex-shrink: 0; width: 18px; height: 18px; margin-top: 2px; color: var(--gold); }
+        .plan .btn { margin-top: auto; width: 100%; }
+
+        .plan.featured { background: var(--dark); color: #fff; border: 2px solid var(--gold); box-shadow: 0 20px 50px rgba(216, 159, 0, 0.25); }
+        .plan.featured ul, .plan.featured .price small { color: #b0a99e; }
+        .plan.featured li svg { color: var(--yellow); }
+
+        .plan .popular {
+            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+            background: var(--grad); color: var(--dark); font-size: 0.78rem; font-weight: 700;
+            padding: 0.3rem 0.9rem; border-radius: 999px; white-space: nowrap;
+        }
+
+        /* Kampanj (samma period som riktiga sidan) */
+        .k-only { display: none; }
+        html.kampanj .k-only { display: inline; }
+        html.kampanj .r-only { display: none; }
+        .plan s { display: block; font-size: 0.9rem; font-weight: 500; color: var(--muted); }
+        .plan.featured s { color: #b0a99e; }
+
+        /* ---------- FAQ ---------- */
+        .faq { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.8rem; }
+        .faq details { overflow: hidden; }
+        .faq details:hover { transform: none; }
+        .faq summary {
+            list-style: none; cursor: pointer; padding: 1.2rem 1.5rem;
+            display: flex; align-items: center; gap: 0.9rem; font-weight: 600; font-size: 1.02rem;
+        }
+        .faq summary::-webkit-details-marker { display: none; }
+        .faq summary .tag {
+            flex-shrink: 0; font-size: 0.72rem; font-weight: 700; padding: 0.22rem 0.65rem;
+            border-radius: 999px; background: rgba(216, 159, 0, 0.1); color: #8a6600;
+            border: 1px solid rgba(216, 159, 0, 0.25);
+        }
+        .faq summary .q { flex: 1; }
+        .faq summary .chev { width: 20px; height: 20px; color: var(--muted); transition: transform 0.25s ease; flex-shrink: 0; }
+        .faq details[open] summary .chev { transform: rotate(180deg); }
+        .faq .answer { padding: 0 1.5rem 1.3rem 1.5rem; color: var(--muted); display: flex; flex-direction: column; gap: 0.65rem; }
+        .faq .answer ul { padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem; }
+        .faq .answer strong { color: var(--text); }
+
+        /* ---------- CTA ---------- */
+        .cta {
+            text-align: center; padding: 4.5rem 2rem; border-radius: 28px;
+            background: var(--dark); color: #fff; position: relative; overflow: hidden;
+        }
+        .cta::before {
+            content: ""; position: absolute; inset: auto -20% -60% -20%; height: 120%;
+            background: radial-gradient(closest-side, rgba(243, 198, 20, 0.25), rgba(243, 198, 20, 0));
+            pointer-events: none;
+        }
+        .cta > * { position: relative; }
+        .cta .badge { background: rgba(243, 198, 20, 0.12); border-color: rgba(243, 198, 20, 0.3); color: var(--yellow); }
+        .cta h2 { font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; letter-spacing: -1.2px; line-height: 1.12; margin-bottom: 1rem; }
+        .cta p { color: #b0a99e; font-size: 1.1rem; margin-bottom: 2rem; }
+        .cta .btn-outline { background: rgba(255, 255, 255, 0.06); color: #fff; border-color: rgba(255, 255, 255, 0.15); box-shadow: none; }
+
+        /* ---------- Footer ---------- */
+        footer { padding: 4rem 0 2.5rem 0; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+        footer h4 { font-size: 0.95rem; margin-bottom: 1rem; }
+        footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; color: var(--muted); font-size: 0.95rem; }
+        footer a:hover { color: var(--text); }
+        .footer-bottom { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.88rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+        /* ---------- Responsivt ---------- */
+        @media (max-width: 1000px) {
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .features { grid-template-columns: 1fr; }
+            .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .pricing { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.25rem; }
+            .nav-links { display: none; }
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
+        @media (max-width: 600px) {
+            section { padding: 4rem 0; }
+            .hero { padding: 4.5rem 0 3rem 0; }
+            .projects, .pricing { grid-template-columns: 1fr; }
+            .parody-bar { font-size: 0.75rem; gap: 0.6rem; }
+            .parody-bar .hide-sm { display: none; }
+            .parody-bar .show-sm { display: inline; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition: none !important; }
+        }
+    </style>
+
+    <script>
+        // Samma kampanjperiod som på riktiga sidan (17 nov – 20 dec 2026)
+        (function () {
+            var now = new Date(), start = new Date(2026, 10, 17), end = new Date(2026, 11, 21);
+            var q = location.search;
+            var on = /[?&]kampanj=1/.test(q) ? true : /[?&]kampanj=0/.test(q) ? false : (now >= start && now < end);
+            if (on) document.documentElement.classList.add('kampanj');
+        })();
+    </script>
+</head>
+<body>
+
+    <!-- Parodibanner med strömbrytaren tillbaka -->
+    <div class="parody-bar" role="region" aria-label="Om den här sidan">
+        <span><span class="hide-sm">Så här hade fenrac.se sett ut om den bara var byggd med AI</span><span class="show-sm">fenrac.se byggd med AI</span></span>
+        <button type="button" class="ai-switch" id="aiSwitch" role="switch" aria-checked="true" aria-label="AI-design: på. Stäng av för att gå tillbaka till riktiga sidan">
+            <span class="track" aria-hidden="true"><span class="knob"></span></span>
+            <span class="hide-sm">Tillbaka</span>
+        </button>
+    </div>
+
+    <nav class="ai-nav" aria-label="Huvudmeny">
+        <div class="container nav-inner">
+            <a href="#" class="ai-logo"><span class="mark" aria-hidden="true">✦</span>Fenrac</a>
+            <ul class="nav-links">
+                <li><a href="#om-oss">Om oss</a></li>
+                <li><a href="#projekt">Projekt</a></li>
+                <li><a href="#priser">Priser</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <a href="#kontakt" class="btn btn-dark">Kom igång</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="glow" aria-hidden="true"></div>
+            <div class="container">
+                <span class="badge">✨ Webbyrå i Helsingborg</span>
+                <h1>Där idéer blir till <span class="gradient-text">verklighet</span></h1>
+                <p class="lead">Vi hjälper företag och privatpersoner att utveckla sin digitala närvaro genom moderna webbplatser, smarta digitala lösningar och apputveckling – och tar din vision till nästa nivå.</p>
+                <div class="hero-actions">
+                    <a href="#kontakt" class="btn btn-primary">Starta projekt 🚀</a>
+                    <a href="#projekt" class="btn btn-outline">Se våra arbeten →</a>
+                </div>
+                <div class="trusted">
+                    Betrodd av innovativa varumärken
+                    <div class="trusted-row">
+                        <span>Jobbvio</span><span>Fornoleon</span><span>Wimo</span><span>Untheorized</span><span>RootTheme</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIFFROR -->
+        <section style="padding-top: 0;">
+            <div class="container stats">
+                <div class="card stat"><strong class="gradient-text">7+</strong><span>Lanserade projekt</span></div>
+                <div class="card stat"><strong class="gradient-text">4</strong><span>Flexibla prisplaner</span></div>
+                <div class="card stat"><strong class="gradient-text">0</strong><span>Färdiga mallar</span></div>
+                <div class="card stat"><strong class="gradient-text">2026</strong><span>Grundat</span></div>
+            </div>
+        </section>
+
+        <!-- OM OSS -->
+        <section id="om-oss">
+            <div class="container">
+                <div class="section-head">
+                    <span class="badge">Varför välja oss?</span>
+                    <h2>Vi gör det <span class="gradient-text">bättre</span></h2>
+                    <p>Fenrac AB · Helsingborg är till för dig. Låt oss förvandla din digitala resa tillsammans.</p>
+                </div>
+                <div class="features">
+                    <div class="card feature">
+                        <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                        <h3>Tydlig kommunikation</h3>
+                        <p>Vi är noga med tydlig kommunikation, för att kunderna ska få den bästa möjliga produkt.</p>
+                    </div>
+                    <div class="card feature">
+                        <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1z"/></svg></div>
+                        <h3>Unik design</h3>
+                        <p>Inte samma AI-hemsida som syns överallt, utan vi blandar in den mänskliga faktorn för en unik design.</p>
+                    </div>
+                    <div class="card feature">
+                        <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                        <h3>Snabb leverans</h3>
+                        <p>Nästan lika kort produktionstid som de icke-mänskliga tjänsterna. Vi utvecklar också våra egna idéer.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJEKT -->
+        <section id="projekt">
+            <div class="container">
+                <div class="section-head">
+                    <span class="badge">Portfolio</span>
+                    <h2>Våra <span class="gradient-text">projekt</span></h2>
+                    <p>Utforska hur vi har förvandlat idéer till digitala upplevelser.</p>
+                </div>
+                <div class="projects">
+                    <a href="https://jobbvio.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">J</div><h3>Jobbvio</h3><span>jobbvio.se</span><div class="go">Utforska →</div></a>
+                    <a href="https://fornoleon.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">F</div><h3>Fornoleon</h3><span>fornoleon.se</span><div class="go">Utforska →</div></a>
+                    <a href="https://neocarlsson.fenrac.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">V</div><h3>VD. Portfolio</h3><span>neocarlsson.fenrac.se</span><div class="go">Utforska →</div></a>
+                    <a href="https://foliohelper.fenrac.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">F</div><h3>FolioHelper</h3><span>foliohelper.fenrac.se</span><div class="go">Utforska →</div></a>
+                    <a href="https://roottheme.fenrac.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">R</div><h3>RootTheme</h3><span>roottheme.fenrac.se</span><div class="go">Utforska →</div></a>
+                    <a href="https://wimo.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">W</div><h3>Wimo</h3><span>wimo.se</span><div class="go">Utforska →</div></a>
+                    <a href="https://untheorized.fenrac.se" target="_blank" rel="noopener noreferrer" class="card project"><div class="initial" aria-hidden="true">U</div><h3>Untheorized</h3><span>untheorized.fenrac.se</span><div class="go">Utforska →</div></a>
+                    <a href="#kontakt" class="card project highlight"><div class="initial" aria-hidden="true">+</div><h3>Ditt nästa projekt</h3><span>Din idé till verklighet</span><div class="go">Låt oss börja →</div></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRISER -->
+        <section id="priser">
+            <div class="container">
+                <div class="section-head">
+                    <span class="badge">Prisplaner</span>
+                    <h2>Enkla och <span class="gradient-text">transparenta</span> priser</h2>
+                    <p>Välj den modell som passar bäst för ditt nästa digitala projekt.</p>
+                </div>
+                <div class="pricing">
+                    <div class="card plan">
+                        <h3>Basic</h3>
+                        <div class="price"><span class="r-only">Från 7 000 kr</span><span class="k-only"><s>7 000 kr</s>Från 5 000 kr</span></div>
+                        <ul>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>En mindre hemsida</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Byggd efter dina önskemål</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Fram till lansering</li>
+                        </ul>
+                        <a href="index.html#kontakt" class="btn btn-outline">Välj Basic</a>
+                    </div>
+                    <div class="card plan">
+                        <h3>Pro</h3>
+                        <div class="price"><span class="r-only">Från 12 000 kr</span><span class="k-only"><s>12 000 kr</s>Från 10 000 kr</span></div>
+                        <ul>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>En större hemsida</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Fler sidor och funktioner</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Fram till lansering</li>
+                        </ul>
+                        <a href="index.html#kontakt" class="btn btn-outline">Välj Pro</a>
+                    </div>
+                    <div class="card plan featured">
+                        <span class="popular">✨ Mest populär</span>
+                        <h3>Elite</h3>
+                        <div class="price">3 000 kr<small>/ mån · startavgift <span class="r-only">12 000 kr</span><span class="k-only">10 000 kr</span></small></div>
+                        <ul>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Skräddarsytt tillsammans med dig</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Utvecklas under en längre tid</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Underhåll även efter lansering</li>
+                        </ul>
+                        <a href="index.html#kontakt" class="btn btn-primary">Välj Elite</a>
+                    </div>
+                    <div class="card plan">
+                        <h3>Custom</h3>
+                        <div class="price">Varierande</div>
+                        <ul>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Appar och större system</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Varumärkeskoncept</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Pris efter projekt</li>
+                        </ul>
+                        <a href="index.html#kontakt" class="btn btn-outline">Kontakta oss</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq">
+            <div class="container">
+                <div class="section-head">
+                    <span class="badge">FAQ</span>
+                    <h2>Vanliga <span class="gradient-text">frågor</span></h2>
+                    <p>Allt du behöver veta – på ett och samma ställe.</p>
+                </div>
+                <div class="faq">
+                    <details class="card"><summary><span class="tag">Basic</span><span class="q">Vad ingår i Basic?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Med Basic designar och bygger vi en mindre hemsida utifrån dina önskemål, hela vägen fram till lansering. Du berättar vad du behöver, vi tar fram ett förslag och formar sidan tills du är nöjd.</p><ul><li>Unik design – ingen färdig mall</li><li>Anpassad för mobil, surfplatta och dator</li><li>Hjälp med publicering vid lansering</li></ul></div></details>
+                    <details class="card"><summary><span class="tag">Basic</span><span class="q">Varför står det "från" 7 000 kr?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>7 000 kr är startpriset för en mindre hemsida. Det slutliga priset beror på hur stort projektet är, till exempel hur många sidor och vilka funktioner du behöver.</p><p>Efter vårt första samtal får du ett tydligt pris innan vi börjar, så att det inte blir några överraskningar.</p></div></details>
+                    <details class="card"><summary><span class="tag">Basic</span><span class="q">Vad händer efter lanseringen?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Basic och Pro gäller fram till lanseringen. Efter det ingår inget löpande underhåll eller vidareutveckling.</p><p>Vill du göra ändringar senare kan du kontakta oss för en offert, eller gå över till <strong>Elite</strong> om du vill att vi tar hand om sidan löpande.</p></div></details>
+                    <details class="card"><summary><span class="tag">Pro</span><span class="q">Vad är skillnaden mellan Basic och Pro?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Både Basic och Pro bygger vi efter dina önskemål fram till lansering. Skillnaden är storleken på hemsidan:</p><ul><li><strong>Basic</strong> passar en mindre hemsida</li><li><strong>Pro</strong> passar en större hemsida med fler sidor och funktioner</li></ul></div></details>
+                    <details class="card"><summary><span class="tag">Pro</span><span class="q">Varför står det "från" 12 000 kr?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>12 000 kr är startpriset för en större hemsida. Det slutliga priset beror på hur många sidor och vilka funktioner du behöver.</p><p>Efter vårt första samtal får du ett tydligt pris innan vi börjar, så att det inte blir några överraskningar.</p></div></details>
+                    <details class="card"><summary><span class="tag">Elite</span><span class="q">Vad är skillnaden mellan Pro och Elite?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Med Basic och Pro bygger vi sidan och lämnar över den vid lansering. Med <strong>Elite</strong> blir vi din digitala partner över tid:</p><ul><li>Vi skräddarsyr hemsidan eller appen <strong>tillsammans</strong> med dig</li><li>Projektet utvecklas under en längre period i stället för att vara klart vid ett datum</li><li>Kontinuerligt underhåll och tydlig kommunikation även efter lansering</li></ul></div></details>
+                    <details class="card"><summary><span class="tag">Elite</span><span class="q">Vad täcker startavgiften på 12 000 kr?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Startavgiften täcker arbetet med att ta fram och bygga den första versionen av din hemsida eller app. Den betalas en gång, i början av samarbetet.</p><p>Månadsavgiften på 3 000 kr gäller sedan för det löpande arbetet.</p></div></details>
+                    <details class="card"><summary><span class="tag">Elite</span><span class="q">Vad får jag för 3 000 kr i månaden?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Månadsavgiften täcker det löpande arbetet med din sida, till exempel:</p><ul><li>Underhåll så att sidan fungerar som den ska</li><li>Ändringar och uppdateringar av innehåll</li><li>Fortsatt utveckling av nya delar och funktioner</li><li>En kontaktperson som känner ditt projekt</li></ul></div></details>
+                    <details class="card"><summary><span class="tag">Elite</span><span class="q">Finns det någon bindningstid?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Bindningstid och uppsägningstid går vi igenom tillsammans och skriver in i avtalet innan vi startar, så att du vet exakt vad som gäller.</p></div></details>
+                    <details class="card"><summary><span class="tag">Custom</span><span class="q">När passar Custom?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Custom är till för projekt som inte passar in i Basic, Pro eller Elite. Det kan till exempel vara:</p><ul><li>En app eller ett större system</li><li>Ett helt varumärkeskoncept, inte bara en hemsida</li><li>Ett projekt med speciella krav på funktioner eller tidsplan</li></ul></div></details>
+                    <details class="card"><summary><span class="tag">Custom</span><span class="q">Hur sätts priset för Custom?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Priset varierar eftersom varje Custom-projekt ser olika ut. Vi börjar med ett samtal om vad du vill uppnå, och sedan får du ett förslag med upplägg och pris som är anpassat efter just ditt projekt.</p></div></details>
+                    <details class="card"><summary><span class="tag">Allmänt</span><span class="q">Hur lång tid tar det att bygga en hemsida?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Det beror på hur stort projektet är. Vi lägger till den mänskliga faktorn för en unik design, men har ändå nästan lika kort produktionstid som AI-tjänsterna. Du får en tidsplan när vi har gått igenom ditt projekt.</p></div></details>
+                    <details class="card"><summary><span class="tag">Allmänt</span><span class="q">Kan jag byta plan senare?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Ja. Har du börjat med Basic eller Pro och vill ha löpande hjälp efter lanseringen kan du gå över till Elite. Hör av dig så hittar vi ett upplägg som passar.</p></div></details>
+                    <details class="card"><summary><span class="tag">Allmänt</span><span class="q">Hur kommer vi igång?</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="answer"><p>Välj den plan som låter mest rätt och fyll i kontaktformuläret. Berätta kort om din idé, så återkommer vi för att boka ett första samtal. Är du osäker på vilken plan som passar hjälper vi dig att välja.</p></div></details>
+                </div>
+            </div>
+        </section>
+
+        <!-- KONTAKT -->
+        <section id="kontakt">
+            <div class="container">
+                <div class="cta">
+                    <span class="badge">✨ Kontakt</span>
+                    <h2>Redo att ta nästa steg?</h2>
+                    <p>Har du ett projekt i åtanke eller vill du förbättra något nuvarande? Låt oss skapa något fantastiskt tillsammans.</p>
+                    <div class="hero-actions">
+                        <a href="index.html#kontakt" class="btn btn-primary">Hör av dig 🚀</a>
+                        <a href="mailto:info@fenrac.se" class="btn btn-outline">info@fenrac.se</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="ai-logo" style="margin-bottom: 1rem;"><span class="mark" aria-hidden="true">✦</span>Fenrac</div>
+                    <p style="color: var(--muted); max-width: 360px; font-size: 0.95rem;">Vi bygger digitala hemsidor, appar och koncept som sticker ut från mängden.</p>
+                </div>
+                <div>
+                    <h4>Navigering</h4>
+                    <ul>
+                        <li><a href="#om-oss">Om oss</a></li>
+                        <li><a href="#projekt">Våra projekt</a></li>
+                        <li><a href="#priser">Priser</a></li>
+                        <li><a href="#faq">Vanliga frågor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li><a href="index.html#kontakt">Starta ett projekt</a></li>
+                        <li><a href="mailto:info@fenrac.se">info@fenrac.se</a></li>
+                        <li><a href="https://www.linkedin.com/company/fenrac-ab" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Fenrac AB · Org.nr 559612-4981</span>
+                <a href="index.html">← Tillbaka till den riktiga sidan</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Strömbrytaren: stäng av AI-designen och gå tillbaka till riktiga sidan
+        (function () {
+            var sw = document.getElementById('aiSwitch');
+            window.addEventListener('pageshow', function () { sw.setAttribute('aria-checked', 'true'); });
+            sw.addEventListener('click', function () {
+                if (sw.getAttribute('aria-checked') === 'false') return;
+                sw.setAttribute('aria-checked', 'false');
+                // Låt strömbrytaren slå om först, tona sedan till svart och byt sida
+                setTimeout(function () { fenracFadeTo('index.html#ai-jamforelse'); }, 350);
+            });
+        })();
+    </script>
+</body>
+</html>

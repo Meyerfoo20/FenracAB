@@ -708,6 +708,252 @@
             color: var(--accent-yellow);
         }
 
+        /* AI-JÄMFÖRELSE: strömbrytare som visar sidan "byggd med AI" (ai.html) */
+        .ai-compare {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 5rem 4rem 0 4rem;
+        }
+
+        /* Hörnram som på Wimos startsida: bara hörnet uppe till vänster och nere till höger,
+           som en halvöppen ruta. */
+        .ai-compare-card {
+            position: relative;
+            isolation: isolate;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 3rem;
+            padding: 3rem 3.5rem;
+            border-radius: 22px;
+        }
+
+        /* Statisk hörnram: bara hörnet uppe till vänster och nere till höger */
+        .ai-compare-card::before,
+        .ai-compare-card::after {
+            content: "";
+            position: absolute;
+            width: 56px;
+            height: 46px;
+            border: 0 solid var(--text-main);
+            pointer-events: none;
+        }
+
+        .ai-compare-card::before {
+            top: 0;
+            left: 0;
+            border-top-width: 2px;
+            border-left-width: 2px;
+            border-top-left-radius: 22px;
+        }
+
+        .ai-compare-card::after {
+            right: 0;
+            bottom: 0;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+            border-bottom-right-radius: 22px;
+        }
+
+        .ai-compare-kicker {
+            display: block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 0.9rem;
+        }
+
+        .ai-compare-text h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.7rem, 3vw, 2.4rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            max-width: 620px;
+        }
+
+        .ai-compare-text p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            max-width: 560px;
+        }
+
+        /* Strömbrytaren och den handskrivna uppmaningen bredvid varandra (aldrig över "AI") */
+        .ai-compare-action {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.4rem;
+        }
+
+        .ai-compare-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-bottom: 1.35rem; /* i höjd med strömbrytaren */
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.35rem;
+            line-height: 1;
+            color: var(--text-main);
+            transform: rotate(-5deg);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .ai-compare-hint svg {
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        /* Pilen knuffar mot strömbrytaren tills man har hovrat över den (som på Wimo) */
+        @media (prefers-reduced-motion: no-preference) {
+            .ai-compare-hint:not(.sedd) svg {
+                animation: aiKnuff 1.8s ease-in-out infinite;
+            }
+        }
+
+        @keyframes aiKnuff {
+            0%, 55%, 100% { transform: none; }
+            25% { transform: translateX(-7px); }
+        }
+
+        .ai-compare-hint {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ai-compare-action:hover .ai-compare-hint {
+            transform: rotate(-5deg) translateX(-4px) scale(1.06);
+        }
+
+        .ai-switch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .ai-switch-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 1.5rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .ai-switch .ai-switch-label {
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .ai-switch .ai-switch-label.is-ai {
+            opacity: 0.4;
+        }
+
+        .ai-switch .ai-switch-track {
+            position: relative;
+            width: 112px;
+            height: 56px;
+            border-radius: 999px;
+            background: var(--bg-dark);
+            transition: background 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .ai-switch .ai-switch-knob {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Hover: knoppen glider en bit mot "AI", spåret får en guldkant och "AI" tonas upp */
+        .ai-switch:not([aria-checked="true"]):hover .ai-switch-track,
+        .ai-switch:not([aria-checked="true"]):focus-visible .ai-switch-track {
+            box-shadow: 0 0 0 3px var(--accent-gold), 0 8px 22px rgba(216, 159, 0, 0.3);
+        }
+
+        .ai-switch:not([aria-checked="true"]):hover .ai-switch-knob,
+        .ai-switch:not([aria-checked="true"]):focus-visible .ai-switch-knob {
+            left: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3), 0 0 0 4px rgba(216, 159, 0, 0.25);
+        }
+
+        .ai-switch:not([aria-checked="true"]):hover .ai-switch-label.is-ai,
+        .ai-switch:not([aria-checked="true"]):focus-visible .ai-switch-label.is-ai {
+            opacity: 0.85;
+            color: var(--accent-gold);
+        }
+
+        .ai-switch:active .ai-switch-knob {
+            width: 52px; /* knoppen "trycks ihop" lite vid klick */
+        }
+
+        .ai-switch:focus-visible .ai-switch-track {
+            outline: 3px solid var(--accent-gold);
+            outline-offset: 4px;
+        }
+
+        /* Påslagen: guldgradient innan man skickas vidare */
+        .ai-switch[aria-checked="true"] .ai-switch-track {
+            background: linear-gradient(135deg, #d89f00, #f3c614);
+            box-shadow: 0 0 22px rgba(216, 159, 0, 0.5);
+        }
+
+        .ai-switch[aria-checked="true"] .ai-switch-knob {
+            left: 62px;
+            background: #ffffff;
+        }
+
+        .ai-switch[aria-checked="true"] .ai-switch-label.is-ai {
+            opacity: 1;
+            color: var(--accent-gold);
+        }
+
+        .ai-switch[aria-checked="true"] .ai-switch-label.is-human {
+            opacity: 0.4;
+        }
+
+        @media (max-width: 950px) {
+            .ai-compare {
+                padding: 3.5rem 1.25rem 0 1.25rem;
+            }
+
+            .ai-compare-card {
+                grid-template-columns: 1fr;
+                gap: 1.6rem;
+                padding: 2.2rem 1.6rem;
+                background: #ffffff; /* på mobil finns ingen hover: visa tonen direkt */
+            }
+
+            .ai-compare-text p {
+                font-size: 0.98rem;
+            }
+
+            .ai-compare-card::before,
+            .ai-compare-card::after {
+                width: 40px;
+                height: 34px;
+            }
+        }
+
         /* PRICING SECTION */
         .pricing-section {
             padding: 5rem 2.5rem;
@@ -1694,6 +1940,60 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
     <!-- Juldesign: aktiv automatiskt 20 nov – 25 dec varje år (förhandsvisa med ?jul=1) -->
     <script src="jul.js"></script>
+    <!-- Övergång mellan riktiga sidan och AI-sidan: tona till svart och tona in igen -->
+    <style>
+        .page-fade {
+            position: fixed;
+            inset: 0;
+            z-index: 2147483000;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+        .page-fade.on { opacity: 1; pointer-events: all; }
+        html.fade-from-black body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 2147483000;
+            background: #000;
+            pointer-events: none;
+            animation: fadeFromBlack 0.8s 0.15s ease forwards;
+        }
+        @keyframes fadeFromBlack { to { opacity: 0; visibility: hidden; } }
+        @media (prefers-reduced-motion: reduce) {
+            .page-fade { transition: none; }
+            html.fade-from-black body::after { display: none; }
+        }
+    </style>
+    <script>
+        (function () {
+            try {
+                if (sessionStorage.getItem('fenracFade') === '1') {
+                    sessionStorage.removeItem('fenracFade');
+                    document.documentElement.classList.add('fade-from-black');
+                }
+            } catch (e) {}
+        })();
+        // Tonar skärmen till svart och går sedan till url (nästa sida tonas in ur svart)
+        function fenracFadeTo(url) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { window.location.href = url; return; }
+            var o = document.createElement('div');
+            o.className = 'page-fade';
+            document.body.appendChild(o);
+            requestAnimationFrame(function () { requestAnimationFrame(function () { o.classList.add('on'); }); });
+            try { sessionStorage.setItem('fenracFade', '1'); } catch (e) {}
+            setTimeout(function () { window.location.href = url; }, 650);
+        }
+        // Bakåtknappen (sidan kommer från cache): ta bort den svarta ytan
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted) {
+                var f = document.querySelectorAll('.page-fade');
+                for (var i = 0; i < f.length; i++) f[i].remove();
+            }
+        });
+    </script>
     <!-- Kampanj: 2 000 kr rabatt på Basic, Pro och Elite, 17 nov – 20 dec 2026.
          Slås av automatiskt efter 20 december. Förhandsvisa: ?kampanj=1, stäng av: ?kampanj=0 -->
     <script>
@@ -1848,6 +2148,30 @@
                         <div class="arrow-indicator">←</div>
                     </a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI-JÄMFÖRELSE -->
+    <section id="ai-jamforelse" class="ai-compare" aria-labelledby="ai-jamforelse-rubrik">
+        <div class="ai-compare-card">
+            <div class="ai-compare-text">
+                <span class="ai-compare-kicker">Människa vs. AI //</span>
+                <h2 id="ai-jamforelse-rubrik">Varför är den mänskliga faktorn så viktig?</h2>
+                <p>Undrar du varför människan fortfarande gör skillnad i webbutveckling? Tryck på knappen och se hur vår sida hade sett ut om den bara var gjord av AI.</p>
+            </div>
+            <div class="ai-compare-action">
+                <button type="button" class="ai-switch" id="aiSwitch" role="switch" aria-checked="false" aria-label="Visa sidan byggd med AI">
+                    <span class="ai-switch-labels" aria-hidden="true">
+                        <span class="ai-switch-label is-human">Mänsklig</span>
+                        <span class="ai-switch-label is-ai">AI</span>
+                    </span>
+                    <span class="ai-switch-track" aria-hidden="true"><span class="ai-switch-knob"></span></span>
+                </button>
+                <span class="ai-compare-hint" aria-hidden="true">
+                    <svg viewBox="0 0 44 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M42 15 C31 7, 18 7, 5 12"/><path d="M12 4 L4 12 L12 19"/></svg>
+                    Testa!
+                </span>
             </div>
         </div>
     </section>
@@ -2412,6 +2736,25 @@
                 o.textContent = o.getAttribute('data-kampanj');
             });
         }
+    </script>
+    <script>
+        // AI-jämförelse: slå på strömbrytaren -> gå till parodisidan ai.html
+        (function () {
+            var sw = document.getElementById('aiSwitch');
+            if (!sw) return;
+            var hint = document.querySelector('.ai-compare-hint');
+            // Tillbaka från ai.html (eller via bakåtknappen): strömbrytaren ska stå på "Mänsklig"
+            window.addEventListener('pageshow', function () { sw.setAttribute('aria-checked', 'false'); });
+            // Pilen slutar knuffa när man har hittat strömbrytaren
+            sw.addEventListener('mouseenter', function () { if (hint) hint.classList.add('sedd'); });
+            sw.addEventListener('click', function () {
+                if (sw.getAttribute('aria-checked') === 'true') return;
+                sw.setAttribute('aria-checked', 'true');
+                if (hint) hint.classList.add('sedd');
+                // Låt strömbrytaren slå om först, tona sedan till svart och byt sida
+                setTimeout(function () { fenracFadeTo('ai.html'); }, 350);
+            });
+        })();
     </script>
 </body>
 </html>

@@ -158,7 +158,7 @@
         if (!footer) return;
 
         var fCanvas = document.createElement('canvas');
-        fCanvas.className = 'jul-footer-snow';
+        fCanvas.className = 'jul-footer-snow jul-footer-flakes';
         fCanvas.setAttribute('aria-hidden', 'true');
         footer.insertBefore(fCanvas, footer.firstChild);
         var fctx = fCanvas.getContext('2d');
@@ -169,7 +169,8 @@
         pCanvas.setAttribute('aria-hidden', 'true');
         footer.insertBefore(pCanvas, fCanvas.nextSibling);
         var pctx = pCanvas.getContext('2d');
-        var pileDirty = true, pileFull = false, frame = 0, loopId = 0;
+        var pileDirty = true, pileFull = false, frame = 0, loopId = 0, scrapedNow = false;
+        var bits = []; // snö som yr iväg när man skrapar
 
         // Mjuk snöflinga som förritad bild
         var sprite = document.createElement('canvas');
@@ -191,11 +192,10 @@
 
         /* --- Snöhögen: höjd per kolumn (var 4:e pixel) --- */
         var COL = 4;
-        var BASE_PAD = 48;          // footerns vanliga padding i botten (3rem)
         var START_H = 8;            // tunt snölager från början
-        var GROWTH = 7;             // hur fort högen växer per landad flinga
+        var GROWTH = 26;            // hur fort högen växer per landad flinga
         var pile = [];
-        var maxPile = 70;
+        var maxPile = 400;          // sätts till hela footerns höjd i resizeFooter()
         var STORE = 'julSnowPile';
         var lastSave = 0;
 
@@ -264,7 +264,7 @@
 
         function settle() {
             // snön rasar ut om det blir för brant ...
-            var maxSlope = 0.9;
+            var maxSlope = 2.2; // tillåt branta kanter så att skrapade spår ligger kvar
             for (var pass = 0; pass < 3; pass++) {
                 for (var i = 1; i < pile.length; i++) {
                     var diff = pile[i] - pile[i - 1];
@@ -276,21 +276,8 @@
             var prev = pile[0];
             for (var k = 1; k < pile.length - 1; k++) {
                 var cur = pile[k];
-                pile[k] = cur * 0.8 + (prev + pile[k + 1]) * 0.1;
+                pile[k] = cur * 0.9 + (prev + pile[k + 1]) * 0.05;
                 prev = cur;
-            }
-        }
-
-        var lastPad = BASE_PAD;
-        function updatePadding() {
-            // footern växer med snön så att texten alltid ligger ovanför
-            var top = 0;
-            for (var i = 0; i < pile.length; i++) if (pile[i] > top) top = pile[i];
-            var pad = Math.max(BASE_PAD, Math.ceil((top + 18) / 8) * 8);
-            if (pad > lastPad) { // växer bara, krymper aldrig -> inga onödiga omritningar
-                lastPad = pad;
-                footer.style.paddingBottom = pad + 'px';
-                resizeFooter();
             }
         }
 
@@ -306,8 +293,9 @@
             fctx.setTransform(1, 0, 0, 1, 0, 0);
             pctx.setTransform(fdpr, 0, 0, fdpr, 0, 0);
             pileDirty = true;
-            maxPile = (document.documentElement.clientWidth || window.innerWidth) < 768 ? 50 : 70;
+            maxPile = Math.max(40, fh - 6); // snön kan täcka hela footern
             resamplePile(Math.ceil(fw / COL) + 1);
+            for (var c = 0; c < pile.length; c++) if (pile[c] > maxPile) pile[c] = maxPile;
             var target = Math.round(Math.min(260, (fw * fh) / 2600) * (reduceMotion ? 0.5 : 1));
             while (fFlakes.length < target) fFlakes.push(makeFooterFlake(true));
             fFlakes.length = target;
@@ -368,13 +356,24 @@
                 fctx.globalAlpha = f.o * (f.landed ? f.landed : 1);
                 fctx.drawImage(sprite, f.x - size / 2, f.y - size / 2, size, size);
             }
+            // Snö som yr iväg när man skrapar
+            for (var b = bits.length - 1; b >= 0; b--) {
+                var s = bits[b];
+                s.vy += 0.25; s.x += s.vx; s.y += s.vy; s.life -= 0.03;
+                if (s.life <= 0 || s.y > fh + 10) { bits.splice(b, 1); continue; }
+                var bs = s.r * 2.6;
+                fctx.globalAlpha = Math.max(0, s.life);
+                fctx.drawImage(sprite, s.x - bs / 2, s.y - bs / 2, bs, bs);
+            }
             fctx.globalAlpha = 1;
 
-            // Snöhögen räknas och ritas om högst ~6 gånger per sekund
-            if (frame % 10 === 0 && pileDirty) {
+            // Snöhögen ritas om direkt när man skrapar, annars högst ~6 gånger per sekund
+            if (scrapedNow && pileDirty) {
+                drawPile();
+                scrapedNow = false;
+            } else if (frame % 10 === 0 && pileDirty) {
                 settle();
                 drawPile();
-                updatePadding();
                 var full = true;
                 for (var q = 0; q < pile.length; q++) if (pile[q] < maxPile - 1) { full = false; break; }
                 pileFull = full;
@@ -393,10 +392,50 @@
             requestAnimationFrame(function (t) { tickFooter(t, id); });
         }
 
+        /* --- Skrapa bort snön med muspekaren (eller fingret) --- */
+        var SCRAPE_R = 38;
+        function scrapeAt(clientX, clientY) {
+            var rect = footer.getBoundingClientRect();
+            var x = clientX - rect.left, y = clientY - rect.top;
+            if (x < -SCRAPE_R || x > fw + SCRAPE_R || y < 0 || y > fh) return;
+            var level = fh - y; // höjden där pekaren är
+            if (pileAt(x) < level - SCRAPE_R * 0.5) return; // pekaren är ovanför snön
+            var c0 = Math.round(x / COL), cr = Math.ceil(SCRAPE_R / COL), removed = 0;
+            for (var d = -cr; d <= cr; d++) {
+                var i = c0 + d;
+                if (i < 0 || i >= pile.length) continue;
+                var dx = d * COL;
+                if (Math.abs(dx) > SCRAPE_R) continue;
+                var target = Math.max(0, level - Math.sqrt(SCRAPE_R * SCRAPE_R - dx * dx));
+                if (pile[i] > target) { removed += pile[i] - target; pile[i] = target; }
+            }
+            if (removed > 0) {
+                pileDirty = true; pileFull = false; scrapedNow = true;
+                var n = Math.min(7, Math.ceil(removed / 60));
+                for (var k = 0; k < n && bits.length < 160; k++) {
+                    bits.push({ x: x + rnd(-SCRAPE_R * 0.6, SCRAPE_R * 0.6), y: y - rnd(0, 10),
+                                vx: rnd(-3, 3), vy: rnd(-5, -1.5), r: rnd(1.2, 3), life: 1 });
+                }
+            }
+        }
+        footer.addEventListener('pointermove', function (e) { scrapeAt(e.clientX, e.clientY); }, { passive: true });
+        footer.addEventListener('touchmove', function (e) {
+            if (e.touches && e.touches[0]) scrapeAt(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+        // Tangentbord: skrapa fram länken man tabbar till så att den alltid syns
+        footer.addEventListener('focusin', function (e) {
+            var r = e.target.getBoundingClientRect(), fr = footer.getBoundingClientRect();
+            var level = fh - (r.bottom - fr.top) - 6;
+            for (var i = Math.floor((r.left - fr.left - 20) / COL); i <= Math.ceil((r.right - fr.left + 20) / COL); i++) {
+                if (i >= 0 && i < pile.length && pile[i] > level) pile[i] = Math.max(0, level);
+            }
+            pileDirty = true; pileFull = false; scrapedNow = true;
+            if (!running) drawPile();
+        });
+
         resizeFooter();
         settle();
         drawPile();
-        updatePadding();
         window.addEventListener('resize', resizeFooter);
 
         if ('IntersectionObserver' in window) {

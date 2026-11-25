@@ -180,21 +180,6 @@ html.jul .hero-title .highlight {
     color: var(--jul-red);
 }
 
-html.jul .hero-title .highlight::after {
-    content: "✦";
-    position: absolute;
-    top: -0.35em;
-    right: -0.55em;
-    font-size: 0.45em;
-    color: var(--accent-gold);
-    animation: jul-star 3s ease-in-out infinite;
-}
-
-@keyframes jul-star {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    50%      { transform: scale(0.7) rotate(20deg); opacity: 0.6; }
-}
-
 /* Julgranskulor som hänger från projektkorten i hero */
 html.jul .hero-postcard {
     overflow: visible;
@@ -346,6 +331,11 @@ html.jul .jul-footer-snow {
     z-index: 1;
 }
 
+/* Snöhögen ligger OVANPÅ footerns innehåll (den kan snöa in hela footern),
+   flingorna faller framför den. Klick går igenom (pointer-events: none). */
+html.jul .jul-footer-pile { z-index: 3; }
+html.jul .jul-footer-flakes { z-index: 4; }
+
 html.jul footer .jul-snowdrift {
     z-index: 3;
 }
@@ -393,8 +383,7 @@ html.jul .jul-footer-greeting {
 @media (prefers-reduced-motion: reduce) {
     html.jul .jul-bulb,
     html.jul .jul-bulb::after,
-    html.jul .jul-ornament,
-    html.jul .hero-title .highlight::after {
+    html.jul .jul-ornament {
         animation: none;
     }
 }
